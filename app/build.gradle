@@ -30,4 +30,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile files('libs/universal-image-loader-1.9.4-SNAPSHOT.jar')
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1.1@aar'
+    compile files('libs/jsoup-1.7.2.jar')
+    compile project(':library')
 }

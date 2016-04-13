@@ -27,6 +27,14 @@ public class NewItemsAdapter extends BaseAdapter{
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public void setData(List<NewItem> newItems){
+        this.newItems = newItems;
+    }
+
+    public void addAll(List<NewItem> mDatas){
+        this.newItems.addAll(mDatas);
+    }
+
     @Override
     public int getCount() {
         if (null==newItems||newItems.isEmpty()){
