@@ -1,7 +1,7 @@
 package com.deity.bedtimestory;
 
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.deity.bedtimestory.adapter.TypeAdapter;
@@ -10,7 +10,7 @@ import com.viewpagerindicator.TabPageIndicator;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
     @Bind(R.id.indicator)
     public TabPageIndicator mIndicator;
     @Bind(R.id.pager)
