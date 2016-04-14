@@ -49,6 +49,10 @@ public class MainFragment extends Fragment{
      */
     private int currentPage = 1;
 
+    public MainFragment(){
+        mNewItemBiz = new NewItemBiz();
+    }
+
     public MainFragment(int type){
         this.type = type;
         mNewItemBiz = new NewItemBiz();
@@ -69,9 +73,14 @@ public class MainFragment extends Fragment{
 //        ButterKnife.bind(getActivity());
         content_items = (PullToRefreshListView) view.findViewById(R.id.content_items);
         // Set a listener to be invoked when the list should be refreshed.
-        content_items.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+        content_items.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
-            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                new LoadDatasTask().execute(LOAD_REFREASH);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 new LoadDatasTask().execute(LOAD_REFREASH);
             }
         });
@@ -82,11 +91,9 @@ public class MainFragment extends Fragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         mAdapter = new NewItemsAdapter(getActivity());
         mAdapter.setData(mDatas);
         content_items.setAdapter(mAdapter);
-
     }
 
 
@@ -96,13 +103,11 @@ public class MainFragment extends Fragment{
     public Integer refreashData()
     {
         // 获取最新数据
-        try
-        {
+        try{
             List<NewItem> newsItems = mNewItemBiz.getNewItems("http://cloud.csdn.net/cloud", currentPage);
             mAdapter.setData(newsItems);
 
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
             return -1;
         }
