@@ -13,6 +13,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ProgressBar;
 
 import com.deity.bedtimestory.adapter.NewContentAdapter;
+import com.deity.bedtimestory.data.MyApplication;
 import com.deity.bedtimestory.entity.News;
 import com.deity.bedtimestory.network.NewItemBiz;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
@@ -94,6 +95,10 @@ public class NewsContentActivity extends Activity {
 
     public void back(View view) {
         finish();
+    }
+
+    public void voiceStart(){
+        MyApplication.instance.mSpeechUtilOffline.play(mDatas.get(0).getContent());
     }
 
 }
