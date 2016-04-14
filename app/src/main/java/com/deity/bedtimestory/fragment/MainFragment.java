@@ -1,15 +1,20 @@
 package com.deity.bedtimestory.fragment;
 
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.deity.bedtimestory.NewsContentActivity;
 import com.deity.bedtimestory.R;
 import com.deity.bedtimestory.adapter.NewItemsAdapter;
 import com.deity.bedtimestory.data.Params;
@@ -20,6 +25,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,11 +54,16 @@ public class MainFragment extends Fragment{
      * 当前页面
      */
     private int currentPage = 1;
+    /**
+     * 是否是第一次进入
+     */
+    private boolean isFirstIn = true;
 
     public MainFragment(){
         mNewItemBiz = new NewItemBiz();
     }
 
+    @SuppressLint("ValidFragment")
     public MainFragment(int type){
         this.type = type;
         mNewItemBiz = new NewItemBiz();
@@ -81,7 +92,16 @@ public class MainFragment extends Fragment{
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                new LoadDatasTask().execute(LOAD_REFREASH);
+                new LoadDatasTask().execute(LOAD_MORE);
+            }
+        });
+        content_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                NewItem newsItem = mDatas.get(position-1);
+                Intent intent = new Intent(getActivity(), NewsContentActivity.class);
+                intent.putExtra("url", newsItem.getLink());
+                startActivity(intent);
             }
         });
         return view;
@@ -94,19 +114,27 @@ public class MainFragment extends Fragment{
         mAdapter = new NewItemsAdapter(getActivity());
         mAdapter.setData(mDatas);
         content_items.setAdapter(mAdapter);
+        if (isFirstIn){
+            isFirstIn=false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    content_items.setRefreshing(true);
+                }
+            },1000);
+        }
     }
 
 
     /**
      * 下拉刷新数据
      */
-    public Integer refreashData()
-    {
+    public Integer refreashData(){
         // 获取最新数据
         try{
             List<NewItem> newsItems = mNewItemBiz.getNewItems("http://cloud.csdn.net/cloud", currentPage);
+            mDatas.addAll(newsItems);
             mAdapter.setData(newsItems);
-
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -118,19 +146,16 @@ public class MainFragment extends Fragment{
     /**
      * 会根据当前网络情况，判断是从数据库加载还是从网络继续获取
      */
-    public void loadMoreData()
-    {
+    public void loadMoreData(){
         // 当前数据是从网络获取的
         currentPage += 1;
-        try
-        {
+        try{
             List<NewItem> newsItems = mNewItemBiz.getNewItems("http://cloud.csdn.net/cloud", currentPage);
+            mDatas.addAll(newsItems);
             mAdapter.addAll(newsItems);
         } catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
 
     /**
@@ -143,10 +168,8 @@ public class MainFragment extends Fragment{
     {
 
         @Override
-        protected Integer doInBackground(Integer... params)
-        {
-            switch (params[0])
-            {
+        protected Integer doInBackground(Integer... params) {
+            switch (params[0]) {
                 case LOAD_MORE:
                     loadMoreData();
                     break;
@@ -157,10 +180,8 @@ public class MainFragment extends Fragment{
         }
 
         @Override
-        protected void onPostExecute(Integer result)
-        {
-            switch (result)
-            {
+        protected void onPostExecute(Integer result) {
+            switch (result) {
 //                case TIP_ERROR_NO_NETWORK:
 //                    ToastUtil.toast(getActivity(), "没有网络连接！");
 //                    mAdapter.setDatas(mDatas);
@@ -169,11 +190,9 @@ public class MainFragment extends Fragment{
 //                case TIP_ERROR_SERVER:
 //                    ToastUtil.toast(getActivity(), "服务器错误！");
 //                    break;
-
                 default:
                     mAdapter.notifyDataSetChanged();
                     break;
-
             }
             content_items.onRefreshComplete();
         }
