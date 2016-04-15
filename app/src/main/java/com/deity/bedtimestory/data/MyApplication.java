@@ -2,6 +2,7 @@ package com.deity.bedtimestory.data;
 
 import android.app.Application;
 
+import com.deity.bedtimestory.utils.SpeechUtilOffline;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -12,11 +13,15 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
  * Created by fengwenhua on 2016/4/12.
  */
 public class MyApplication extends Application{
+    public SpeechUtilOffline mSpeechUtilOffline;
+    public static MyApplication instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         initImageLoader();
+//        initVoice();
     }
 
     public void initImageLoader(){
@@ -32,5 +37,10 @@ public class MyApplication extends Application{
                 .writeDebugLogs() // Remove for release app
                 .build();//开始构建
         ImageLoader.getInstance().init(config);//全局初始化此配置
+    }
+
+    public void initVoice(){
+        mSpeechUtilOffline = new SpeechUtilOffline(MyApplication.instance);
+        mSpeechUtilOffline.init();
     }
 }

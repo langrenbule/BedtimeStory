@@ -11,7 +11,7 @@ import com.deity.bedtimestory.fragment.MainFragment;
  * Created by fengwenhua on 2016/4/12.
  */
 public class TypeAdapter extends FragmentPagerAdapter {
-    private final static String[] MY_TITLES ={"故事会","宝宝睡前故事","段子手"};
+    private final static String[] MY_TITLES ={"故事汇","睡前故事","段子手"};
 
     public TypeAdapter(FragmentManager fm) {
         super(fm);
