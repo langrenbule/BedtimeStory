@@ -97,7 +97,7 @@ public class NewsContentActivity extends Activity {
         finish();
     }
 
-    public void voiceStart(){
+    public void voiceStart(View view){
         MyApplication.instance.mSpeechUtilOffline.play(mDatas.get(0).getContent());
     }
 

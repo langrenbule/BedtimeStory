@@ -21,7 +21,7 @@ public class MyApplication extends Application{
         super.onCreate();
         instance = this;
         initImageLoader();
-//        initVoice();
+        initVoice();
     }
 
     public void initImageLoader(){
