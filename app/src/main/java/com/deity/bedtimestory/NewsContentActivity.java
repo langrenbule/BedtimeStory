@@ -71,13 +71,6 @@ public class NewsContentActivity extends Activity {
     }
 
     @Override
-    protected void onDestroy() {
-        MyApplication.instance.mSpeechUtilOffline.release();
-        super.onDestroy();
-
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
         MyApplication.instance.mSpeechUtilOffline.stop();
