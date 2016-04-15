@@ -60,7 +60,7 @@ public class SpeechUtilOffline implements TTSPlayerListener {
 	public void play(String content) {
 		if(!TextUtils.isEmpty(content)){
 			try {
-				mTTSPlayer.play(MyVoiceUtils.numbers2chinese(content.toUpperCase()));
+				mTTSPlayer.play(content.toUpperCase());//MyVoiceUtils.numbers2chinese(
 			}catch (Exception e){
 //				KTLog.e("语音播报错误",e);//主要是catch java.lang.IllegalThreadStateException: Thread already started
 			}

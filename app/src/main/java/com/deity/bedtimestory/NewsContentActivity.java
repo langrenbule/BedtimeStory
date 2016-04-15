@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -69,6 +70,19 @@ public class NewsContentActivity extends Activity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        MyApplication.instance.mSpeechUtilOffline.release();
+        super.onDestroy();
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.instance.mSpeechUtilOffline.stop();
+    }
+
     class LoadDataTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -98,7 +112,14 @@ public class NewsContentActivity extends Activity {
     }
 
     public void voiceStart(View view){
-        MyApplication.instance.mSpeechUtilOffline.play(mDatas.get(0).getContent());
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i=0;i<mDatas.size();i++){
+            News news = mDatas.get(i);
+            if (!TextUtils.isEmpty(news.getContent())){
+                stringBuffer.append(news.getContent());
+            }
+        }
+        MyApplication.instance.mSpeechUtilOffline.play(stringBuffer.toString());
     }
 
 }
