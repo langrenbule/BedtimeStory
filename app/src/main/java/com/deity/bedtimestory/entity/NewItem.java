@@ -90,4 +90,9 @@ public class NewItem {
     public void setNewsType(int newsType) {
         this.newsType = newsType;
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

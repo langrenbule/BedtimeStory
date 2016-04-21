@@ -10,12 +10,12 @@ public class Params {
     /**网络地址*/
     public static enum TargetUrl{
 
-        STORY_MAGAZINE(0,"http://cloud.csdn.net/cloud"),
+        STORY_MAGAZINE(0,"http://www.85nian.net/renwu/page/"),//读者图书
         BABY_BED(1,"http://cloud.csdn.net/cloud"),
         STORY_PUNSTER(2,"http://cloud.csdn.net/cloud");
 
-        private int newType;
-        private String urlStr;
+        public int newType;
+        public String urlStr;
 
         TargetUrl(int newType,String urlStr){
             this.newType = newType;

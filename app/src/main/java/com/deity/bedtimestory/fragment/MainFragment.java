@@ -132,7 +132,7 @@ public class MainFragment extends Fragment{
     public Integer refreashData(){
         // 获取最新数据
         try{
-            List<NewItem> newsItems = mNewItemBiz.getNewItems("http://cloud.csdn.net/cloud", currentPage);
+            List<NewItem> newsItems = mNewItemBiz.getArticleItems(Params.TargetUrl.STORY_MAGAZINE.urlStr, currentPage);
             mDatas.addAll(newsItems);
             mAdapter.setData(newsItems);
         } catch (Exception e) {
@@ -150,7 +150,9 @@ public class MainFragment extends Fragment{
         // 当前数据是从网络获取的
         currentPage += 1;
         try{
-            List<NewItem> newsItems = mNewItemBiz.getNewItems("http://cloud.csdn.net/cloud", currentPage);
+//            List<NewItem> newsItems = mNewItemBiz.getNewItems("http://cloud.csdn.net/cloud", currentPage);
+            List<NewItem> newsItems = mNewItemBiz.getArticleItems(Params.TargetUrl.STORY_MAGAZINE.urlStr, currentPage);
+
             mDatas.addAll(newsItems);
             mAdapter.addAll(newsItems);
         } catch (Exception e){
