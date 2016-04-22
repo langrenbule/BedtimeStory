@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,4 +20,13 @@
             android:smoothScrollbar="true"
             ptr:ptrMode="both"/>
 
-</LinearLayout>
+        <ImageView
+            android:id="@+id/reLoadImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:src="@drawable/base_empty_view"
+            android:visibility="gone" />
+
+</FrameLayout>

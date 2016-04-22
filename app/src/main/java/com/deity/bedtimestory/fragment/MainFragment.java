@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.deity.bedtimestory.NewsContentActivity;
@@ -39,6 +40,8 @@ public class MainFragment extends Fragment{
 
     @Bind(R.id.content_items)
     public PullToRefreshListView content_items;
+    @Bind(R.id.reLoadImage)
+    public ImageView reloadImag;
     private NewItemBiz mNewItemBiz;
     private static final int LOAD_MORE = 0x110;
     private static final int LOAD_REFREASH = 0x111;
@@ -83,6 +86,13 @@ public class MainFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_main,container,false);
 //        ButterKnife.bind(getActivity());
         content_items = (PullToRefreshListView) view.findViewById(R.id.content_items);
+        reloadImag = (ImageView) view.findViewById(R.id.reLoadImage);
+        reloadImag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreashData();
+            }
+        });
         // Set a listener to be invoked when the list should be refreshed.
         content_items.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
@@ -135,13 +145,16 @@ public class MainFragment extends Fragment{
             List<NewItem> newsItems = mNewItemBiz.getArticleItems(Params.TargetUrl.STORY_MAGAZINE.urlStr, currentPage);
             mDatas.addAll(newsItems);
             mAdapter.setData(newsItems);
+            reloadImag.setVisibility(View.GONE);
         } catch (Exception e) {
+
             e.printStackTrace();
             return -1;
         }
         return -1;
 
     }
+
 
     /**
      * 会根据当前网络情况，判断是从数据库加载还是从网络继续获取
@@ -150,9 +163,7 @@ public class MainFragment extends Fragment{
         // 当前数据是从网络获取的
         currentPage += 1;
         try{
-//            List<NewItem> newsItems = mNewItemBiz.getNewItems("http://cloud.csdn.net/cloud", currentPage);
             List<NewItem> newsItems = mNewItemBiz.getArticleItems(Params.TargetUrl.STORY_MAGAZINE.urlStr, currentPage);
-
             mDatas.addAll(newsItems);
             mAdapter.addAll(newsItems);
         } catch (Exception e){
@@ -193,6 +204,9 @@ public class MainFragment extends Fragment{
 //                    ToastUtil.toast(getActivity(), "服务器错误！");
 //                    break;
                 default:
+                    if (null==mDatas||mDatas.isEmpty()){
+                        reloadImag.setVisibility(View.VISIBLE);
+                    }
                     mAdapter.notifyDataSetChanged();
                     break;
             }
