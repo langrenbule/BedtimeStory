@@ -90,7 +90,7 @@ public class MainFragment extends Fragment{
         reloadImag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                refreashData();
+                content_items.setRefreshing(true);
             }
         });
         // Set a listener to be invoked when the list should be refreshed.
@@ -145,7 +145,6 @@ public class MainFragment extends Fragment{
             List<NewItem> newsItems = mNewItemBiz.getArticleItems(Params.TargetUrl.STORY_MAGAZINE.urlStr, currentPage);
             mDatas.addAll(newsItems);
             mAdapter.setData(newsItems);
-            reloadImag.setVisibility(View.GONE);
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -195,17 +194,11 @@ public class MainFragment extends Fragment{
         @Override
         protected void onPostExecute(Integer result) {
             switch (result) {
-//                case TIP_ERROR_NO_NETWORK:
-//                    ToastUtil.toast(getActivity(), "没有网络连接！");
-//                    mAdapter.setDatas(mDatas);
-//                    mAdapter.notifyDataSetChanged();
-//                    break;
-//                case TIP_ERROR_SERVER:
-//                    ToastUtil.toast(getActivity(), "服务器错误！");
-//                    break;
                 default:
                     if (null==mDatas||mDatas.isEmpty()){
                         reloadImag.setVisibility(View.VISIBLE);
+                    }else{
+                        reloadImag.setVisibility(View.GONE);
                     }
                     mAdapter.notifyDataSetChanged();
                     break;
