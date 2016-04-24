@@ -23,7 +23,7 @@
         <!--百度广告-->
         <meta-data
             android:name="BaiduMobAd_APP_ID"
-            android:value="e866cfb0" />
+            android:value="f4b9d240" />
 
         <activity
             android:name=".InitActivity"

@@ -70,12 +70,6 @@ public class NewsContentActivity extends Activity {
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MyApplication.instance.mSpeechUtilOffline.stop();
-    }
-
     class LoadDataTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -102,17 +96,6 @@ public class NewsContentActivity extends Activity {
 
     public void back(View view) {
         finish();
-    }
-
-    public void voiceStart(View view){
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i=0;i<mDatas.size();i++){
-            News news = mDatas.get(i);
-            if (!TextUtils.isEmpty(news.getContent())){
-                stringBuffer.append(news.getContent());
-            }
-        }
-        MyApplication.instance.mSpeechUtilOffline.play(stringBuffer.toString());
     }
 
 }
