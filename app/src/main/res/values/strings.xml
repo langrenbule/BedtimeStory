@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">读者文摘</string>
 
+
+    <string name="show_banner">显示横幅</string>
+    <string name="hide_banner">隐藏横幅</string>
+    <string name="load_interstitial">下载插屏</string>
+    <string name="show_interstitial">显示插屏</string>
+    <string name="clear_log">清空日志</string>
+    <string name="nativead_appWall">原生广告and应用墙</string>
+    <string name="load_splashad">下载开屏</string>
+    <string name="show_splashad">展示开屏</string>
 </resources>

@@ -43,4 +43,5 @@ dependencies {
     compile project(':library')
     compile files('libs/usc.jar')
     compile 'de.greenrobot:greendao:2.1.0'
+    compile files('libs/Baidu_MobAds_SDK.jar')
 }
