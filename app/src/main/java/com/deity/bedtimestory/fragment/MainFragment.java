@@ -148,7 +148,6 @@ public class MainFragment extends Fragment{
             mDatas.addAll(newsItems);
             mAdapter.setData(newsItems);
         } catch (Exception e) {
-
             e.printStackTrace();
             return -1;
         }
@@ -185,10 +184,11 @@ public class MainFragment extends Fragment{
         protected Integer doInBackground(String... params) {
             switch (params[0]) {
                 case Params.LOAD_REFRESH:
-                    loadMoreData(targetType);
+                    refreashData(targetType);
                     break;
                 case Params.LOAD_MORE:
-                    return refreashData(targetType);
+                    loadMoreData(targetType);
+                    break;
             }
             return -1;
         }
