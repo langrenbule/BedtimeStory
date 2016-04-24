@@ -36,15 +36,13 @@ import butterknife.ButterKnife;
  * Created by fengwenhua on 2016/4/12.
  */
 public class MainFragment extends Fragment{
-    private int type;
+    private String targetType;
 
     @Bind(R.id.content_items)
     public PullToRefreshListView content_items;
     @Bind(R.id.reLoadImage)
     public ImageView reloadImag;
     private NewItemBiz mNewItemBiz;
-    private static final int LOAD_MORE = 0x110;
-    private static final int LOAD_REFREASH = 0x111;
     /**
      * 数据
      */
@@ -67,8 +65,8 @@ public class MainFragment extends Fragment{
     }
 
     @SuppressLint("ValidFragment")
-    public MainFragment(int type){
-        this.type = type;
+    public MainFragment(String targetType){
+        this.targetType = targetType;
         mNewItemBiz = new NewItemBiz();
     }
 
@@ -97,18 +95,18 @@ public class MainFragment extends Fragment{
         content_items.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                new LoadDatasTask().execute(LOAD_REFREASH);
+                new LoadDatasTask().execute(Params.LOAD_REFRESH, targetType);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                new LoadDatasTask().execute(LOAD_MORE);
+                new LoadDatasTask().execute(Params.LOAD_MORE, targetType);
             }
         });
         content_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewItem newsItem = mDatas.get(position-1);
+                NewItem newsItem = mDatas.get(position - 1);
                 Intent intent = new Intent(getActivity(), NewsContentActivity.class);
                 intent.putExtra("url", newsItem.getLink());
                 startActivity(intent);
@@ -132,6 +130,10 @@ public class MainFragment extends Fragment{
                     content_items.setRefreshing(true);
                 }
             },1000);
+        }else{
+            if(null==mDatas||mDatas.size()<=0){
+                reloadImag.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -139,10 +141,10 @@ public class MainFragment extends Fragment{
     /**
      * 下拉刷新数据
      */
-    public Integer refreashData(){
+    public Integer refreashData(String targetUrl){
         // 获取最新数据
         try{
-            List<NewItem> newsItems = mNewItemBiz.getArticleItems(Params.TargetUrl.STORY_MAGAZINE.urlStr, currentPage);
+            List<NewItem> newsItems = mNewItemBiz.getArticleItems(targetUrl, currentPage);
             mDatas.addAll(newsItems);
             mAdapter.setData(newsItems);
         } catch (Exception e) {
@@ -158,11 +160,11 @@ public class MainFragment extends Fragment{
     /**
      * 会根据当前网络情况，判断是从数据库加载还是从网络继续获取
      */
-    public void loadMoreData(){
+    public void loadMoreData(String targetUrl){
         // 当前数据是从网络获取的
         currentPage += 1;
         try{
-            List<NewItem> newsItems = mNewItemBiz.getArticleItems(Params.TargetUrl.STORY_MAGAZINE.urlStr, currentPage);
+            List<NewItem> newsItems = mNewItemBiz.getArticleItems(targetUrl, currentPage);
             mDatas.addAll(newsItems);
             mAdapter.addAll(newsItems);
         } catch (Exception e){
@@ -176,17 +178,17 @@ public class MainFragment extends Fragment{
      * @author zhy
      *
      */
-    class LoadDatasTask extends AsyncTask<Integer, Void, Integer>
+    class LoadDatasTask extends AsyncTask<String, Void, Integer>
     {
 
         @Override
-        protected Integer doInBackground(Integer... params) {
+        protected Integer doInBackground(String... params) {
             switch (params[0]) {
-                case LOAD_MORE:
-                    loadMoreData();
+                case Params.LOAD_REFRESH:
+                    loadMoreData(targetType);
                     break;
-                case LOAD_REFREASH:
-                    return refreashData();
+                case Params.LOAD_MORE:
+                    return refreashData(targetType);
             }
             return -1;
         }

@@ -45,7 +45,7 @@ public class NewsContentActivity extends Activity {
 
         Bundle extras = getIntent().getExtras();
         url = extras.getString("url");
-
+        System.out.println("读取的地址:"+url);
         mAdapter = new NewContentAdapter(this);
 
         mListView = (PullToRefreshListView) findViewById(R.id.content_items);

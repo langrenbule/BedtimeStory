@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.deity.bedtimestory.data.Params;
 import com.deity.bedtimestory.fragment.MainFragment;
 
 /**
@@ -19,7 +20,7 @@ public class TypeAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return new MainFragment(1);
+        return new MainFragment(Params.TargetUrl.mUrl.get(position));
     }
 
     @Override

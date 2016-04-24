@@ -38,9 +38,11 @@ public class NewItemBiz {
             Element titleElement = article.select(".entry-header").first().select(".entry-title").first();//.entry-header.entry-title
             if (null==titleElement) continue;
             String title = titleElement.text();
-            String href = titleElement.attr("href");
+            String href = titleElement.getElementsByTag("a").attr("href");
             newsItem.setLink(href);
             newsItem.setTitle(title);
+
+            System.out.println("文章链接地址:" + href);
             /**图片连接*/
             try {
                 Element picElement = article.select(".entry-summary").first().select(".ta-pageimg-right").first().select("a[href]").first();
@@ -63,49 +65,49 @@ public class NewItemBiz {
         return newItemList;
     }
 
-    public List<NewItem> getNewItems(String baseUrl, int currentPage) {
-        String correctUrl = baseUrl + "/" + currentPage;
-        System.out.println("访问地址" + correctUrl);
-        Document document = getUrlDoc(correctUrl);
-        List<NewItem> newItemList = new ArrayList<>();
-        NewItem newsItem = null;
-        Elements units = document.getElementsByClass("unit");
-        for (int i = 0; i < units.size(); i++) {
-            newsItem = new NewItem();
-            newsItem.setNewsType(0);
-            /**获取标题*/
-            Element newsBlock = units.get(i);
-            Element newsTitle = newsBlock.getElementsByTag("h1").get(0);
-            Element newsTitleData = newsTitle.child(0);
-            String title = newsTitleData.text();
-            String href = newsTitleData.attr("href");
-
-            newsItem.setLink(href);
-            newsItem.setTitle(title);
-            /**获取发表时间*/
-            Element getTimeBlock = newsBlock.getElementsByTag("h4").get(0);
-            Element getTimeElement = getTimeBlock.getElementsByClass("ago").get(0);
-            String getTime = getTimeElement.text();
-
-            newsItem.setDate(getTime);
-            /**获取描述*/
-            Element newsDescriptionBlock = newsBlock.getElementsByTag("dl").get(0);// dl
-            Element newsDescriptionElement = newsDescriptionBlock.child(0);// dt
-            try {// 可能没有图片
-                Element img_ele = newsDescriptionElement.child(0);
-                String imgLink = img_ele.child(0).attr("src");
-                newsItem.setImgLink(imgLink);
-            } catch (IndexOutOfBoundsException e) {
-
-            }
-            Element newsDescriptionChild = newsDescriptionBlock.child(1);// dd
-            String content = newsDescriptionChild.text();
-            newsItem.setContent(content);
-            newItemList.add(newsItem);
-        }
-        System.out.println("获取数据:" + newItemList.size());
-        return newItemList;
-    }
+//    public List<NewItem> getNewItems(String baseUrl, int currentPage) {
+//        String correctUrl = baseUrl + "/" + currentPage;
+//        System.out.println("访问地址" + correctUrl);
+//        Document document = getUrlDoc(correctUrl);
+//        List<NewItem> newItemList = new ArrayList<>();
+//        NewItem newsItem = null;
+//        Elements units = document.getElementsByClass("unit");
+//        for (int i = 0; i < units.size(); i++) {
+//            newsItem = new NewItem();
+//            newsItem.setNewsType(0);
+//            /**获取标题*/
+//            Element newsBlock = units.get(i);
+//            Element newsTitle = newsBlock.getElementsByTag("h1").get(0);
+//            Element newsTitleData = newsTitle.child(0);
+//            String title = newsTitleData.text();
+//            String href = newsTitleData.attr("href");
+//            System.out.println("文章链接地址:"+href);
+//            newsItem.setLink(href);
+//            newsItem.setTitle(title);
+//            /**获取发表时间*/
+//            Element getTimeBlock = newsBlock.getElementsByTag("h4").get(0);
+//            Element getTimeElement = getTimeBlock.getElementsByClass("ago").get(0);
+//            String getTime = getTimeElement.text();
+//
+//            newsItem.setDate(getTime);
+//            /**获取描述*/
+//            Element newsDescriptionBlock = newsBlock.getElementsByTag("dl").get(0);// dl
+//            Element newsDescriptionElement = newsDescriptionBlock.child(0);// dt
+//            try {// 可能没有图片
+//                Element img_ele = newsDescriptionElement.child(0);
+//                String imgLink = img_ele.child(0).attr("src");
+//                newsItem.setImgLink(imgLink);
+//            } catch (IndexOutOfBoundsException e) {
+//
+//            }
+//            Element newsDescriptionChild = newsDescriptionBlock.child(1);// dd
+//            String content = newsDescriptionChild.text();
+//            newsItem.setContent(content);
+//            newItemList.add(newsItem);
+//        }
+//        System.out.println("获取数据:" + newItemList.size());
+//        return newItemList;
+//    }
 
 //    public NewsDto getNews(String urlStr)throws Exception {
 //        NewsDto newsDto = new NewsDto();
@@ -196,36 +198,85 @@ public class NewItemBiz {
      * @return
      * @throws Exception
      */
+//    public NewsDto getNews(String urlStr)throws Exception {
+//        NewsDto newsDto = new NewsDto();
+//        List<News> newses = new ArrayList();
+//        Document doc = getUrlDoc(urlStr);
+//        Element detailEle = doc.select(".left .detail").get(0);
+//        Element titleEle = detailEle.select("h1.title").get(0);
+//        News news = new News();
+//        news.setTitle(titleEle.text());
+//        news.setType(1);
+//        newses.add(news);
+//
+//        Element summaryEle = detailEle.select("div.summary").get(0);
+//        news = new News();
+//        news.setSummary(summaryEle.text());
+//        newses.add(news);
+//
+//        Element contentEle = detailEle.select("div.con.news_content").get(0);
+//        Elements childrenEle = contentEle.children();
+//        for (Element child : childrenEle) {
+//            Elements imgEles = child.getElementsByTag("img");
+//            if (imgEles.size() > 0) {
+//                for (Element imgEle : imgEles) {
+//                    if (!imgEle.attr("src").equals("")) {
+//                        news = new News();
+//                        news.setImageLink(imgEle.attr("src"));
+//                        newses.add(news);
+//                    }
+//                }
+//            }
+//            imgEles.remove();
+//            if (!child.text().equals("")) {
+//                news = new News();
+//                news.setType(3);
+//                try {
+//                    if (child.children().size() == 1) {
+//                        Element cc = child.child(0);
+//                        if (cc.tagName().equals("b")) {
+//                            news.setType(5);
+//                        }
+//                    }
+//                } catch (IndexOutOfBoundsException e) {
+//                    e.printStackTrace();
+//                }
+//                news.setContent(child.outerHtml());
+//                newses.add(news);
+//            }
+//        }
+//
+//        newsDto.setNewses(newses);
+//        return newsDto;
+//    }
+
     public NewsDto getNews(String urlStr)throws Exception {
         NewsDto newsDto = new NewsDto();
         List<News> newses = new ArrayList();
         Document doc = getUrlDoc(urlStr);
-        Element detailEle = doc.select(".left .detail").get(0);
-        Element titleEle = detailEle.select("h1.title").get(0);
+        Element detailEle = doc.getElementsByTag("article").get(0);
+
+        Element titleEle = detailEle.select(".entry-header").first().select(".entry-title").first();
         News news = new News();
         news.setTitle(titleEle.text());
         news.setType(1);
         newses.add(news);
 
-        Element summaryEle = detailEle.select("div.summary").get(0);
+        Element summaryEle = detailEle.select(".entry-header").first().select(".below-title-meta").first().select(".adt").first();
         news = new News();
         news.setSummary(summaryEle.text());
         newses.add(news);
 
-        Element contentEle = detailEle.select("div.con.news_content").get(0);
-        Elements childrenEle = contentEle.children();
+        Elements childrenEle = detailEle.select(".entry-content").first().children();
         for (Element child : childrenEle) {
-            Elements imgEles = child.getElementsByTag("img");
-            if (imgEles.size() > 0) {
-                for (Element imgEle : imgEles) {
-                    if (!imgEle.attr("src").equals("")) {
-                        news = new News();
-                        news.setImageLink(imgEle.attr("src"));
-                        newses.add(news);
-                    }
+            try {
+                Element imgEle = child.select("div.article_img").first().select("img").first();
+                if (!imgEle.attr("src").equals("")) {
+                    news = new News();
+                    news.setImageLink(imgEle.attr("src"));
+                    newses.add(news);
                 }
-            }
-            imgEles.remove();
+            }catch (Exception e){}
             if (!child.text().equals("")) {
                 news = new News();
                 news.setType(3);
@@ -239,7 +290,7 @@ public class NewItemBiz {
                 } catch (IndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
-                news.setContent(child.outerHtml());
+                news.setContent(child.outerHtml().trim());
                 newses.add(news);
             }
         }
