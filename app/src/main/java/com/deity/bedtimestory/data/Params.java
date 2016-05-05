@@ -33,4 +33,8 @@ public class Params {
             mUrl.put(7,url_qingchun);
         }
     }
+
+    //腾讯广告相关参数
+    public static final String APPID = "1105304677";
+    public static final String SplashPosID = "5080714150321210";
 }
