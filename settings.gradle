@@ -1,1 +1,1 @@
-include ':generator', ':app', ':library'
+include ':app', ':library'
