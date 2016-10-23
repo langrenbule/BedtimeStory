@@ -1,31 +1,35 @@
 package com.deity.bedtimestory;
 
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Looper;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.bumptech.glide.Glide;
 import com.deity.bedtimestory.adapter.NewContentAdapter;
-import com.deity.bedtimestory.data.MyApplication;
 import com.deity.bedtimestory.entity.News;
 import com.deity.bedtimestory.network.NewItemBiz;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-public class NewsContentActivity extends Activity {
 
-    private PullToRefreshListView mListView;
+public class NewsContentActivity extends AppCompatActivity {
+
+    private ListView mListView;
     private List<News> mDatas;
+    @Bind(R.id.backdrop) public ImageView backdrop;
 
     /**
      * 该页面的url
@@ -40,7 +44,14 @@ public class NewsContentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_content);
+        ButterKnife.bind(this);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle("这是标题");
         mNewItemBiz = new NewItemBiz();
 
         Bundle extras = getIntent().getExtras();
@@ -48,7 +59,14 @@ public class NewsContentActivity extends Activity {
         System.out.println("读取的地址:"+url);
         mAdapter = new NewContentAdapter(this);
 
-        mListView = (PullToRefreshListView) findViewById(R.id.content_items);
+        String imageUrl = extras.getString("imageUrl");
+        if(!TextUtils.isEmpty(imageUrl)){
+            Glide.with(this).load(imageUrl).into(backdrop);
+        }else {
+            Glide.with(this).load(R.drawable.ic_launcher).into(backdrop);
+        }
+
+        mListView = (ListView) findViewById(R.id.content_items);
         mProgressBar = (ProgressBar) findViewById(R.id.id_newsContentPro);
 
         mListView.setAdapter(mAdapter);

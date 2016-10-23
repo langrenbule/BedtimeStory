@@ -27,9 +27,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Fragment通用
@@ -109,6 +107,7 @@ public class MainFragment extends Fragment{
                 NewItem newsItem = mDatas.get(position - 1);
                 Intent intent = new Intent(getActivity(), NewsContentActivity.class);
                 intent.putExtra("url", newsItem.getLink());
+                intent.putExtra("imageUrl", newsItem.getImgLink());
                 startActivity(intent);
             }
         });

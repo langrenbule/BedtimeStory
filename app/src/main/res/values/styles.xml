@@ -30,12 +30,6 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="MyTheme" parent="AppBaseTheme">
-        <item name="vpiTabPageIndicatorStyle">@style/MyWidget.TabPageIndicator</item>
-        <item name="android:windowBackground">@drawable/init_pic</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:animationDuration">5000</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
+
 
 </resources>
