@@ -20,7 +20,7 @@ public class TypeAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return new MainFragment(Params.TargetUrl.mUrl.get(position));
+        return new MainFragment(Params.NewType.whichOne(Params.TargetUrl.mUrl.get(position)));
     }
 
     @Override

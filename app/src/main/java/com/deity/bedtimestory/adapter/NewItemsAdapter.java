@@ -1,53 +1,76 @@
 package com.deity.bedtimestory.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.deity.bedtimestory.R;
-import com.deity.bedtimestory.entity.NewItem;
-import com.deity.bedtimestory.utils.SmallUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.deity.bedtimestory.dao.NewItemEntity;
 
 import java.util.List;
 
 /**
  * Created by fengwenhua on 2016/4/12.
  */
-public class NewItemsAdapter extends BaseAdapter{
+public class NewItemsAdapter extends RecyclerView.Adapter<NewItemsAdapter.ViewHolder> implements  View.OnClickListener {
 
-    private List<NewItem> newItems;
+    private List<NewItemEntity> newItems;
     private LayoutInflater inflater;
+    private Context context;
+    private RecycleViewOnClickListener recycleViewOnClickListener;
 
     public NewItemsAdapter(Context context){
+        this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    public void setData(List<NewItem> newItems){
+    @Override
+    public void onClick(View view) {
+        if (null!=recycleViewOnClickListener){
+            recycleViewOnClickListener.onItemClick(view, (NewItemEntity) view.getTag());
+        }
+    }
+
+    public interface RecycleViewOnClickListener{
+        void onItemClick(View view,NewItemEntity data);
+    }
+
+    public void setRecycleViewOnClickListener(RecycleViewOnClickListener recycleViewOnClickListener) {
+        this.recycleViewOnClickListener = recycleViewOnClickListener;
+    }
+
+    public void setData(List<NewItemEntity> newItems){
         this.newItems = newItems;
     }
 
-    public void addAll(List<NewItem> mDatas){
+    public void addAll(List<NewItemEntity> mDatas){
         this.newItems.addAll(mDatas);
     }
 
-    @Override
-    public int getCount() {
-        if (null==newItems||newItems.isEmpty()){
-            return 0;
-        }
-        return newItems.size();
 
-    }
 
     @Override
-    public Object getItem(int position) {
-        return newItems.get(position);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = inflater.inflate(R.layout.item_news, parent, false);
+        return new NewItemsAdapter.ViewHolder(view);
     }
+
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        NewItemEntity data = newItems.get(position);
+        holder.mTitle.setText(data.getTitle());
+        holder.mContent.setText(data.getContent());
+        Glide.with(context).load(data.getImgLink()).into(holder.mImg);
+        holder.mDate.setText(data.getDate());
+        holder.itemView.setTag(data);
+    }
+
 
     @Override
     public long getItemId(int position) {
@@ -55,37 +78,24 @@ public class NewItemsAdapter extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
-        if (null==convertView){
-            viewHolder = new ViewHolder();
-            convertView = inflater.inflate(R.layout.item_news,null);
-            viewHolder.mContent = (TextView) convertView.findViewById(R.id.id_content);
-            viewHolder.mTitle = (TextView) convertView.findViewById(R.id.id_title);
-            viewHolder.mDate = (TextView) convertView.findViewById(R.id.id_date);
-            viewHolder.mImg = (ImageView) convertView.findViewById(R.id.id_newsImg);
-            convertView.setTag(viewHolder);
-        }else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-        //-------------------------------------
-        NewItem newsItem = newItems.get(position);
-        viewHolder.mTitle.setText(newsItem.getTitle());//TODO 原有更改
-        viewHolder.mContent.setText(newsItem.getContent());
-        viewHolder.mDate.setText(newsItem.getDate());
-        if (newsItem.getImgLink() != null) {
-            viewHolder.mImg.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(newsItem.getImgLink(), viewHolder.mImg, SmallUtils.imageOptions());
-        } else {
-            viewHolder.mImg.setVisibility(View.GONE);
-        }
-        return convertView;
+    public int getItemCount() {
+        if (null==newItems) return 0;
+        return newItems.size();
     }
 
-    public class ViewHolder{
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
         public TextView mTitle;
         public TextView mContent;
         public ImageView mImg;
         public TextView mDate;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mTitle = (TextView) itemView.findViewById(R.id.id_title);
+            mContent = (TextView) itemView.findViewById(R.id.id_content);
+            mImg = (ImageView) itemView.findViewById(R.id.id_newsImg);
+            mDate = (TextView) itemView.findViewById(R.id.id_date);
+        }
     }
 }

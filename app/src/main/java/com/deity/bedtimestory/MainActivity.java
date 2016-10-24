@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 
 import com.deity.bedtimestory.adapter.TypeAdapter;
-import com.viewpagerindicator.TabPageIndicator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -8,6 +8,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 /**
  * Created by fengwenhua on 2016/4/12.
  */
@@ -19,6 +22,17 @@ public class MyApplication extends Application{
         super.onCreate();
         instance = this;
         initImageLoader();
+        initDB();
+    }
+
+    public void initDB(){
+        //不关心数据库更新，数据库变动，则删除数据库
+        RealmConfiguration config = new RealmConfiguration.Builder(getApplicationContext()).deleteRealmIfMigrationNeeded() .build();
+        Realm.setDefaultConfiguration(config);
+        /**
+         * 如何使用
+         * Realm.getDefaultInstance();
+         */
     }
 
     public void initImageLoader(){

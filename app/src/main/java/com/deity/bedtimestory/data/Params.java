@@ -10,6 +10,48 @@ public class Params {
     public static final String LOAD_REFRESH="load_refresh";
     public static final String LOAD_MORE="load_more";
 
+    public static enum NewType{
+        NEW_RENWU(0,TargetUrl.url_renwu),
+        NEW_RENSHENG(1,TargetUrl.url_rensheng),
+        NEW_QINGGAN(2,TargetUrl.url_qinggan),
+        NEW_CHENGZHANG(3,TargetUrl.url_chengzhang),
+        NEW_CHUSHI(4,TargetUrl.url_chushi),
+        NEW_ZHICHANG(5,TargetUrl.url_zhichang),
+        NEW_SHIYE(6,TargetUrl.url_shiye),
+        NEW_QINGCHUN(7,TargetUrl.url_qingchun);
+
+        NewType(int code,String destUrl){
+            this.code = code;
+            this.destUrl = destUrl;
+        }
+        private int code;
+        private String destUrl;
+
+        public int getCode() {
+            return code;
+        }
+
+        public void setCode(int code) {
+            this.code = code;
+        }
+
+        public String getDestUrl() {
+            return destUrl;
+        }
+
+        public void setDestUrl(String destUrl) {
+            this.destUrl = destUrl;
+        }
+
+        public static NewType whichOne(String destUrl){
+            for (NewType newType:NewType.values()){
+                if (newType.getDestUrl().equals(destUrl)){
+                    return newType;
+                }
+            }
+            return NewType.NEW_RENWU;
+        }
+    }
     /**网络地址*/
     public static class TargetUrl{
         public static String url_renwu="http://www.85nian.net/renwu/page/";

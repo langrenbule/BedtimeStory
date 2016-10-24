@@ -30,6 +30,7 @@ public class NewItemBiz {
         NewItem newsItem = null;
         //-----------------------------------------
         Elements articles = document.select("div#content article");
+        if (null==articles) return null;
         for (int i=0;i<articles.size();i++){//Element article:articles
             Element article = articles.get(i);
             newsItem = new NewItem();
