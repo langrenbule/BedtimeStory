@@ -43,12 +43,14 @@ import static com.deity.bedtimestory.event.NetWorkEvent.REQUEST_NETWORK_DATA;
  * Fragment通用
  * Created by fengwenhua on 2016/4/12.
  */
-public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private String targetType;
     private int newsType;
 
     public RecyclerView content_items;
-    /**RefreshLayout*/
+    /**
+     * RefreshLayout
+     */
     public SwipeRefreshLayout refreshLayout;
     public ImageView reloadImag;
     private NewItemBiz mNewItemBiz;
@@ -66,12 +68,12 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     private int currentPage = 1;
 
-    public MainFragment(){
+    public MainFragment() {
         mNewItemBiz = new NewItemBiz();
     }
 
     @SuppressLint("ValidFragment")
-    public MainFragment(Params.NewType newsType){
+    public MainFragment(Params.NewType newsType) {
         this.targetType = newsType.getDestUrl();
         this.newsType = newsType.getCode();
         mNewItemBiz = new NewItemBiz();
@@ -92,7 +94,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main,container,false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
 //        ButterKnife.bind(this,view);
         refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.refresh_layout);
         content_items = (RecyclerView) view.findViewById(R.id.content_items);
@@ -132,9 +134,9 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public void run() {
                 refreshLayout.setRefreshing(true);
             }
-        },1000);
+        }, 1000);
         NetWorkEvent event = REQUEST_NETWORK_DATA;
-        event.setData(targetType,currentPage);
+        event.setData(targetType, currentPage);
         EventBus.getDefault().post(event);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         content_items.setHasFixedSize(true);
@@ -144,7 +146,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onLoadMore(int currentPage) {
                 NetWorkEvent event = REQUEST_NETWORK_DATA;
-                event.setData(targetType,currentPage);
+                event.setData(targetType, currentPage);
                 EventBus.getDefault().post(event);
                 headerViewRecyclerAdapter.notifyDataSetChanged();
             }
@@ -162,15 +164,15 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     /**
      * 请求网络数据
      */
-    public void requestNetWorkData(String targetUrl,int currentPage){
+    public void requestNetWorkData(String targetUrl, int currentPage) {
         try {
             List<NewItem> newsItems = mNewItemBiz.getArticleItems(targetUrl, currentPage);
-            if (null!=newsItems){
+            if (null != newsItems) {
                 NewItemDaoImpl.instance.addNewItemEntities(newsItems);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("request Exception>>>"+e.getMessage());
+            System.out.println("request Exception>>>" + e.getMessage());
         }
         UIEvent event = UIEvent.UI_REFRESH_OVER;
         EventBus.getDefault().post(event);
@@ -180,28 +182,30 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         refreshLayout.setRefreshing(true);
         NetWorkEvent event = REQUEST_NETWORK_DATA;
-        event.setData(targetType,currentPage);
+        event.setData(targetType, currentPage);
         EventBus.getDefault().post(event);
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onEventNetWork(NetWorkEvent event){
-        switch (event){
+    public void onEventNetWork(NetWorkEvent event) {
+        switch (event) {
             case REQUEST_NETWORK_DATA:
-                int currentPage =event.getCurrentPage();
+                int currentPage = event.getCurrentPage();
                 String destUrl = event.getDestUrl();
-                requestNetWorkData(destUrl,currentPage);
+                requestNetWorkData(destUrl, currentPage);
                 break;
         }
     }
 
     @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUIEvent(UIEvent event){
-        switch (event){
+    public void onUIEvent(UIEvent event) {
+        switch (event) {
             case UI_REFRESH_OVER:
-                refreshLayout.setRefreshing(false);
+                if (null != refreshLayout) {
+                    refreshLayout.setRefreshing(false);
+                }
                 headerViewRecyclerAdapter.notifyDataSetChanged();
                 break;
         }

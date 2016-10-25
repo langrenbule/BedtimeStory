@@ -4,6 +4,7 @@ package com.deity.bedtimestory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.deity.bedtimestory.adapter.NewContentAdapter;
@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 import static com.deity.bedtimestory.R.id.content_items;
 
 
-public class NewsContentActivity extends AppCompatActivity {
+public class NewsContentActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mListView;
     private List<News> mDatas;
@@ -38,8 +38,8 @@ public class NewsContentActivity extends AppCompatActivity {
     private String url;
     private NewItemBiz mNewItemBiz;
 
-    private ProgressBar mProgressBar;
     private NewContentAdapter mAdapter;
+    private SwipeRefreshLayout refresh_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +49,9 @@ public class NewsContentActivity extends AppCompatActivity {
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        refresh_layout = (SwipeRefreshLayout) this.findViewById(R.id.refresh_layout);
+        refresh_layout.setOnRefreshListener(this);
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
@@ -72,12 +75,13 @@ public class NewsContentActivity extends AppCompatActivity {
         mListView.setHasFixedSize(true);
         mListView.setLayoutManager(linearLayoutManager);
         mListView.setAdapter(mAdapter);
-
-
-        mProgressBar = (ProgressBar) findViewById(R.id.id_newsContentPro);
-        mProgressBar.setVisibility(View.VISIBLE);
         new LoadDataTask().execute();
+    }
 
+    @Override
+    public void onRefresh() {
+        refresh_layout.setRefreshing(true);
+        new LoadDataTask().execute();
     }
 
     class LoadDataTask extends AsyncTask<Void, Void, Void> {
@@ -99,7 +103,7 @@ public class NewsContentActivity extends AppCompatActivity {
                 return;
             mAdapter.addList(mDatas);
             mAdapter.notifyDataSetChanged();
-            mProgressBar.setVisibility(View.GONE);
+            refresh_layout.setRefreshing(false);
         }
 
     }
