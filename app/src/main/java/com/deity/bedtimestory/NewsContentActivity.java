@@ -5,13 +5,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
@@ -24,10 +23,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import static com.deity.bedtimestory.R.id.content_items;
+
 
 public class NewsContentActivity extends AppCompatActivity {
 
-    private ListView mListView;
+    private RecyclerView mListView;
     private List<News> mDatas;
     @Bind(R.id.backdrop) public ImageView backdrop;
 
@@ -57,7 +58,7 @@ public class NewsContentActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         url = extras.getString("url");
         System.out.println("读取的地址:"+url);
-        mAdapter = new NewContentAdapter(this);
+
 
         String imageUrl = extras.getString("imageUrl");
         if(!TextUtils.isEmpty(imageUrl)){
@@ -65,24 +66,15 @@ public class NewsContentActivity extends AppCompatActivity {
         }else {
             Glide.with(this).load(R.drawable.ic_launcher).into(backdrop);
         }
-
-        mListView = (ListView) findViewById(R.id.content_items);
-        mProgressBar = (ProgressBar) findViewById(R.id.id_newsContentPro);
-
+        mAdapter = new NewContentAdapter(this);
+        mListView = (RecyclerView) findViewById(content_items);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(NewsContentActivity.this);
+        mListView.setHasFixedSize(true);
+        mListView.setLayoutManager(linearLayoutManager);
         mListView.setAdapter(mAdapter);
 
-        mListView.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-//				News news = mDatas.get(position - 1);
-//				String imageLink = news.getImageLink();
-//				//Toast.makeText(NewContentActivity.this, imageLink, 1).show();
-//				Intent intent = new Intent(NewsContentActivity.this,ImageShowActivity.class);
-//				intent.putExtra("url", imageLink);
-//				startActivity(intent);
-            }
-        });
+        mProgressBar = (ProgressBar) findViewById(R.id.id_newsContentPro);
         mProgressBar.setVisibility(View.VISIBLE);
         new LoadDataTask().execute();
 
