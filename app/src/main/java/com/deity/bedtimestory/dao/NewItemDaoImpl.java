@@ -25,6 +25,7 @@ public class NewItemDaoImpl implements NewItemDao {
                 NewItemEntity result = Realm.getDefaultInstance().where(NewItemEntity.class).equalTo("title",entity.getTitle()).findFirst();
                 if (null==result){
                     addNewItemEntity(entity);
+                    System.out.println("entity>>. type"+entity.getNewsType());
                 }
             }
         }
@@ -40,7 +41,7 @@ public class NewItemDaoImpl implements NewItemDao {
         entity.setDate(newItem.getDate());
         entity.setImgLink(newItem.getImgLink());
         entity.setLink(newItem.getLink());
-        entity.setNewsType(newItem.getNewsType());
+        entity.setNewsType(newItem.getNewsType());//Params.NewType.whichOne(
         entity.setTitle(newItem.getTitle());
         Realm.getDefaultInstance().commitTransaction();
 

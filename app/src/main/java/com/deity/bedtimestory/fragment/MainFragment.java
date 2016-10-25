@@ -107,6 +107,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mAdapter = new NewItemsAdapter(getActivity());
         headerViewRecyclerAdapter = new HeaderViewRecyclerAdapter(mAdapter);
         content_items.setAdapter(headerViewRecyclerAdapter);
+
         mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType);
         mDatas.addChangeListener(new RealmChangeListener<RealmResults<NewItemEntity>>() {
             @Override
@@ -138,15 +139,24 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         content_items.setHasFixedSize(true);
         content_items.setLayoutManager(linearLayoutManager);
+        createLoadMoreView();
         content_items.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
                 NetWorkEvent event = REQUEST_NETWORK_DATA;
                 event.setData(targetType,currentPage);
                 EventBus.getDefault().post(event);
+                headerViewRecyclerAdapter.notifyDataSetChanged();
             }
         });
         return view;
+    }
+
+    private void createLoadMoreView() {
+        View loadMoreView = LayoutInflater
+                .from(getActivity())
+                .inflate(R.layout.load_more_view, content_items, false);
+        headerViewRecyclerAdapter.addFooterView(loadMoreView);
     }
 
     /**
@@ -192,6 +202,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         switch (event){
             case UI_REFRESH_OVER:
                 refreshLayout.setRefreshing(false);
+                headerViewRecyclerAdapter.notifyDataSetChanged();
                 break;
         }
     }
