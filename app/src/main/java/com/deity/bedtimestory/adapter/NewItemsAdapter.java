@@ -57,6 +57,8 @@ public class NewItemsAdapter extends RecyclerView.Adapter<NewItemsAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_news, parent, false);
+        //将创建的View注册点击事件
+        view.setOnClickListener(this);
         return new NewItemsAdapter.ViewHolder(view);
     }
 
