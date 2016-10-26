@@ -41,8 +41,8 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
                 .displayer(new FadeInBitmapDisplayer(300)).build();
     }
 
-    public void addList(List<News> datas) {
-        mDatas.addAll(datas);
+    public void setData(List<News> datas) {
+        mDatas = datas;
     }
 
 
@@ -85,7 +85,7 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
         News news = mDatas.get(position);
         switch (news.getType()){
             case NewsType.IMG:
-                imageLoader.displayImage(news.getImageLink(), holder.mImageView, options);
+//                imageLoader.displayImage(news.getImageLink(), holder.mImageView, options);
                 break;
             case NewsType.TITLE:
                 holder.mTextView.setText(news.getTitle());
@@ -94,10 +94,10 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
                 holder.mTextView.setText(news.getSummary());
                 break;
             case NewsType.CONTENT:
-                holder.mTextView.setText("\u3000\u3000"+Html.fromHtml(news.getContent()));
+                holder.mTextView.setText(Html.fromHtml(news.getContent()));
                 break;
             case NewsType.BOLD_TITLE:
-                holder.mTextView.setText("\u3000\u3000"+Html.fromHtml(news.getContent()));
+                holder.mTextView.setText(Html.fromHtml(news.getContent()));
             default:
                 break;
         }

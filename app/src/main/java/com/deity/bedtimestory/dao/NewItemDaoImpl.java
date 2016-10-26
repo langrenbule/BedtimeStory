@@ -7,6 +7,8 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static com.deity.bedtimestory.data.Params.SIZE_PER_PAGE;
+
 
 /**
  * Created by Deity on 2016/10/24.
@@ -49,7 +51,15 @@ public class NewItemDaoImpl implements NewItemDao {
 
     /**需要在主线程上调用*/
     @Override
-    public RealmResults<NewItemEntity> queryNewItemEntities(int newsType) {
-        return Realm.getDefaultInstance().where(NewItemEntity.class).equalTo("newsType",newsType).findAllAsync();
+    public List<NewItemEntity> queryNewItemEntities(int newsType,int currentPage) {
+        RealmResults<NewItemEntity> queryResult = Realm.getDefaultInstance().where(NewItemEntity.class).equalTo("newsType",newsType).findAll();
+        int offset = SIZE_PER_PAGE*currentPage;
+        //1.如果总数量大于偏移量并且大于Params.SIZE_PER_PAGE*currentPage+ Params.SIZE_PER_PAGE
+        if (queryResult.size()>= offset){
+            int lastIndex = (queryResult.size()-1)<=(SIZE_PER_PAGE*(1+currentPage))?(queryResult.size()-1):(SIZE_PER_PAGE*(1+currentPage));
+            if (lastIndex<offset) lastIndex = offset;
+            return queryResult.subList(offset,lastIndex);
+        }
+        return null;
     }
 }

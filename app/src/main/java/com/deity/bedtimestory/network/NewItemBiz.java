@@ -213,12 +213,11 @@ public class NewItemBiz {
         try {
             Connection conneciton = Jsoup.connect(url);
             conneciton.timeout(10*1000);//10秒超时
-//            conneciton.userAgent(Params.AGENT);
+            conneciton.userAgent(Params.AGENT);
             doc = conneciton.get();
-
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("链接目标地址失败");
+            System.out.println("链接目标地址失败:"+e.getMessage());
             return null;
         }
         return doc;

@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.deity.bedtimestory.R;
 import com.deity.bedtimestory.dao.NewItemEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
  */
 public class NewItemsAdapter extends RecyclerView.Adapter<NewItemsAdapter.ViewHolder> implements  View.OnClickListener {
 
-    private List<NewItemEntity> newItems;
+    private List<NewItemEntity> newItems = new ArrayList<>();
     private LayoutInflater inflater;
     private Context context;
     private RecycleViewOnClickListener recycleViewOnClickListener;
@@ -49,7 +50,9 @@ public class NewItemsAdapter extends RecyclerView.Adapter<NewItemsAdapter.ViewHo
     }
 
     public void addAll(List<NewItemEntity> mDatas){
-        this.newItems.addAll(mDatas);
+        if (null!=mDatas) {
+            this.newItems.addAll(mDatas);
+        }
     }
 
 

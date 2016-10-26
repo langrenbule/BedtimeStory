@@ -1,8 +1,8 @@
 package com.deity.bedtimestory;
 
 
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -22,6 +23,11 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.deity.bedtimestory.R.id.content_items;
 
@@ -31,6 +37,8 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
     private RecyclerView mListView;
     private List<News> mDatas;
     @Bind(R.id.backdrop) public ImageView backdrop;
+    private static final String TAG = NewsContentActivity.class.getSimpleName();
+    private Subscription subscription;
 
     /**
      * 该页面的url
@@ -75,37 +83,75 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         mListView.setHasFixedSize(true);
         mListView.setLayoutManager(linearLayoutManager);
         mListView.setAdapter(mAdapter);
-        new LoadDataTask().execute();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                refresh_layout.setRefreshing(true);
+                getNewItems(url);
+            }
+        }, 1000);
+
     }
 
     @Override
     public void onRefresh() {
         refresh_layout.setRefreshing(true);
-        new LoadDataTask().execute();
+        getNewItems(url);
     }
 
-    class LoadDataTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                mDatas = mNewItemBiz.getNews(url).getNewses();
-            } catch (Exception e) {
-                //
-                e.printStackTrace();
+    public void getNewItems(final String destUrl){
+        subscription = Observable.create(new Observable.OnSubscribe<List<News>>() {
+            @Override
+            public void call(Subscriber<? super List<News>> subscriber) {
+                try {
+                    mDatas = mNewItemBiz.getNews(destUrl).getNewses();
+                }catch (Exception e){
+                    Log.i(TAG,"ERROR"+e.getMessage());
+                }
+                subscriber.onNext(mDatas);
+                subscriber.onCompleted();
             }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
+    }
 
-            return null;
-        }
-
+    Subscriber<List<News>> subscriber = new Subscriber<List<News>>() {
         @Override
-        protected void onPostExecute(Void result) {
-            if (mDatas == null)
-                return;
-            mAdapter.addList(mDatas);
+        public void onCompleted() {
+            Log.i(TAG,"OK");
             mAdapter.notifyDataSetChanged();
             refresh_layout.setRefreshing(false);
         }
 
+        @Override
+        public void onError(Throwable e) {
+            Log.i(TAG,"ERROR");
+            mAdapter.notifyDataSetChanged();
+            refresh_layout.setRefreshing(false);
+        }
+
+        @Override
+        public void onNext(List<News> newItems) {
+            Log.i(TAG,"onNext");
+            try {
+                mDatas = newItems;
+                mAdapter.setData(mDatas);
+            } catch (Exception e) {
+                //
+                e.printStackTrace();
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unsubscribe();
+    }
+
+    protected void unsubscribe() {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
     }
 
     public void back(View view) {

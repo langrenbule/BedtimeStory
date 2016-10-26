@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,18 +25,18 @@ import com.deity.bedtimestory.dao.NewItemEntity;
 import com.deity.bedtimestory.data.Params;
 import com.deity.bedtimestory.entity.NewItem;
 import com.deity.bedtimestory.event.NetWorkEvent;
-import com.deity.bedtimestory.event.UIEvent;
 import com.deity.bedtimestory.network.NewItemBiz;
 import com.deity.bedtimestory.utils.EndlessRecyclerOnScrollListener;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import io.realm.RealmChangeListener;
-import io.realm.RealmResults;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.deity.bedtimestory.event.NetWorkEvent.REQUEST_NETWORK_DATA;
 
@@ -44,8 +45,10 @@ import static com.deity.bedtimestory.event.NetWorkEvent.REQUEST_NETWORK_DATA;
  * Created by fengwenhua on 2016/4/12.
  */
 public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    private static final String TAG = MainFragment.class.getSimpleName();
     private String targetType;
     private int newsType;
+    private Subscription subscription;
 
     public RecyclerView content_items;
     /**
@@ -58,7 +61,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     /**
      * 数据
      */
-    private RealmResults<NewItemEntity> mDatas;
+    private List<NewItemEntity> mDatas;
     /**
      * 数据适配器
      */
@@ -82,13 +85,13 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     @Nullable
@@ -110,15 +113,6 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         headerViewRecyclerAdapter = new HeaderViewRecyclerAdapter(mAdapter);
         content_items.setAdapter(headerViewRecyclerAdapter);
 
-        mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType);
-        mDatas.addChangeListener(new RealmChangeListener<RealmResults<NewItemEntity>>() {
-            @Override
-            public void onChange(RealmResults<NewItemEntity> element) {
-                mAdapter.setData(mDatas);
-                mAdapter.notifyDataSetChanged();
-                refreshLayout.setRefreshing(false);
-            }
-        });
         mAdapter.setRecycleViewOnClickListener(new NewItemsAdapter.RecycleViewOnClickListener() {
             @Override
             public void onItemClick(View view, NewItemEntity data) {
@@ -133,6 +127,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void run() {
                 refreshLayout.setRefreshing(true);
+                getNewItems(targetType,currentPage);
             }
         }, 1000);
         NetWorkEvent event = REQUEST_NETWORK_DATA;
@@ -145,10 +140,8 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         content_items.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
-                NetWorkEvent event = REQUEST_NETWORK_DATA;
-                event.setData(targetType, currentPage);
-                EventBus.getDefault().post(event);
-                headerViewRecyclerAdapter.notifyDataSetChanged();
+                System.out.println("加载更多中...");
+                getNewItems(targetType,currentPage);
             }
         });
         return view;
@@ -164,9 +157,10 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     /**
      * 请求网络数据
      */
-    public void requestNetWorkData(String targetUrl, int currentPage) {
+    public List<NewItem> requestNetWorkData(String targetUrl, int currentPage) {
+        List<NewItem> newsItems = null;
         try {
-            List<NewItem> newsItems = mNewItemBiz.getArticleItems(targetUrl, currentPage);
+            newsItems = mNewItemBiz.getArticleItems(targetUrl, currentPage);
             if (null != newsItems) {
                 NewItemDaoImpl.instance.addNewItemEntities(newsItems);
             }
@@ -174,40 +168,66 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             e.printStackTrace();
             System.out.println("request Exception>>>" + e.getMessage());
         }
-        UIEvent event = UIEvent.UI_REFRESH_OVER;
-        EventBus.getDefault().post(event);
+        return newsItems;
+    }
+
+    protected void unsubscribe() {
+        if (subscription != null && !subscription.isUnsubscribed()) {
+            subscription.unsubscribe();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unsubscribe();
     }
 
     @Override
     public void onRefresh() {
         refreshLayout.setRefreshing(true);
-        NetWorkEvent event = REQUEST_NETWORK_DATA;
-        event.setData(targetType, currentPage);
-        EventBus.getDefault().post(event);
+        getNewItems(targetType,currentPage);
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onEventNetWork(NetWorkEvent event) {
-        switch (event) {
-            case REQUEST_NETWORK_DATA:
-                int currentPage = event.getCurrentPage();
-                String destUrl = event.getDestUrl();
-                requestNetWorkData(destUrl, currentPage);
-                break;
-        }
+    public void getNewItems(final String destUrl, final int currentPage){
+        subscription = Observable.create(new Observable.OnSubscribe<List<NewItem>>() {
+            @Override
+            public void call(Subscriber<? super List<NewItem>> subscriber) {
+                List<NewItem> newItems = requestNetWorkData(destUrl, currentPage);
+                subscriber.onNext(newItems);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUIEvent(UIEvent event) {
-        switch (event) {
-            case UI_REFRESH_OVER:
-                if (null != refreshLayout) {
-                    refreshLayout.setRefreshing(false);
-                }
-                headerViewRecyclerAdapter.notifyDataSetChanged();
-                break;
+    Subscriber<List<NewItem>> subscriber = new Subscriber<List<NewItem>>() {
+        @Override
+        public void onCompleted() {
+            Log.i(TAG,"OK");
+            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentPage-1));
+            updateUI();
         }
+
+        @Override
+        public void onError(Throwable e) {
+            Log.i(TAG,"ERROR");
+            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentPage-1));
+            updateUI();
+        }
+
+        @Override
+        public void onNext(List<NewItem> newItems) {
+            NewItemDaoImpl.instance.addNewItemEntities(newItems);
+            //如果成功获取到，那么就直接显示呗
+            Log.i(TAG,"onNext");
+        }
+    };
+
+    public void updateUI(){
+        mAdapter.addAll(mDatas);
+        mAdapter.notifyDataSetChanged();
+        refreshLayout.setRefreshing(false);
+        headerViewRecyclerAdapter.notifyDataSetChanged();
     }
 }

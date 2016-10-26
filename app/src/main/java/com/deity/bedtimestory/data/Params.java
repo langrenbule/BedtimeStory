@@ -7,8 +7,8 @@ import android.util.SparseArray;
  */
 public class Params {
     public static final String AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.79";
-    public static final String LOAD_REFRESH="load_refresh";
-    public static final String LOAD_MORE="load_more";
+
+    public static final int SIZE_PER_PAGE=13;//每页的请求数量
 
     public static enum NewType{
         NEW_RENWU(0,TargetUrl.url_renwu),
