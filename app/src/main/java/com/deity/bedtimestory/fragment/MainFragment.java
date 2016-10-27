@@ -30,6 +30,7 @@ import com.deity.bedtimestory.utils.EndlessRecyclerOnScrollListener;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -62,6 +63,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      * 数据
      */
     private List<NewItemEntity> mDatas;
+    private List<NewItemEntity> mTotalDatas = new ArrayList<>();
     /**
      * 数据适配器
      */
@@ -106,6 +108,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onClick(View v) {
                 refreshLayout.setRefreshing(true);
+                getNewItems(targetType, currentNewsPage);
             }
         });
         refreshLayout.setOnRefreshListener(this);
@@ -140,8 +143,10 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onLoadMore(int currentPage) {
                 System.out.println("加载更多中...");
+                headerViewRecyclerAdapter.setFooterViewsVisable();
                 currentNewsPage = currentPage;
                 getNewItems(targetType,currentPage);
+
             }
         });
         return view;
@@ -180,7 +185,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unsubscribe();
+//        unsubscribe();
     }
 
     @Override
@@ -219,14 +224,20 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         public void onNext(List<NewItem> newItems) {
             NewItemDaoImpl.instance.addNewItemEntities(newItems);
             mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentNewsPage-1));
-            updateUI();
+            updateUI(mDatas);
             //如果成功获取到，那么就直接显示呗
             Log.i(TAG,"onNext");
         }
     };
 
-    public void updateUI(){
-        mAdapter.addAll(mDatas);
+    public void updateUI(List<NewItemEntity> mDatas){
+        mTotalDatas.addAll(mDatas);
+        if (mTotalDatas.isEmpty()){
+            reloadImag.setVisibility(View.VISIBLE);
+        }else {
+            reloadImag.setVisibility(View.GONE);
+        }
+        mAdapter.setData(mTotalDatas);
         mAdapter.notifyDataSetChanged();
         refreshLayout.setRefreshing(false);
         headerViewRecyclerAdapter.notifyDataSetChanged();

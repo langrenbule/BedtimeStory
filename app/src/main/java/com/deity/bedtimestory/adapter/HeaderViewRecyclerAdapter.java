@@ -91,10 +91,18 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType < HEADERS_START + getHeaderCount())
             return new StaticViewHolder(mHeaderViews.get(viewType - HEADERS_START));
-        else if (viewType < FOOTERS_START + getFooterCount())
+        else if (viewType < FOOTERS_START + getFooterCount()) {
             return new StaticViewHolder(mFooterViews.get(viewType - FOOTERS_START));
-        else {
+        }else {
             return mWrappedAdapter.onCreateViewHolder(viewGroup, viewType - getAdapterTypeOffset());
+        }
+    }
+
+    public void setFooterViewsVisable(){
+        if (mFooterViews.size()>0){
+            for (View mFootView:mFooterViews){
+                mFootView.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -170,6 +178,11 @@ public class HeaderViewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         public void onChanged() {
             super.onChanged();
             notifyDataSetChanged();
+            if (mFooterViews.size()>0){
+                for (View mFootView:mFooterViews){
+                    mFootView.setVisibility(View.GONE);
+                }
+            }
         }
 
         @Override
