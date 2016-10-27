@@ -69,7 +69,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     /**
      * 当前页面
      */
-    private int currentPage = 1;
+    public int currentNewsPage = 1;
 
     public MainFragment() {
         mNewItemBiz = new NewItemBiz();
@@ -126,12 +126,11 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                refreshLayout.setRefreshing(true);
-                getNewItems(targetType,currentPage);
+                getNewItems(targetType, currentNewsPage);
             }
         }, 1000);
         NetWorkEvent event = REQUEST_NETWORK_DATA;
-        event.setData(targetType, currentPage);
+        event.setData(targetType, currentNewsPage);
         EventBus.getDefault().post(event);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         content_items.setHasFixedSize(true);
@@ -141,6 +140,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onLoadMore(int currentPage) {
                 System.out.println("加载更多中...");
+                currentNewsPage = currentPage;
                 getNewItems(targetType,currentPage);
             }
         });
@@ -186,7 +186,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
         refreshLayout.setRefreshing(true);
-        getNewItems(targetType,currentPage);
+        getNewItems(targetType, currentNewsPage);
     }
 
     public void getNewItems(final String destUrl, final int currentPage){
@@ -195,7 +195,6 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public void call(Subscriber<? super List<NewItem>> subscriber) {
                 List<NewItem> newItems = requestNetWorkData(destUrl, currentPage);
                 subscriber.onNext(newItems);
-                subscriber.onCompleted();//这个会自动取消监听
             }
         }).subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
@@ -205,20 +204,22 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         @Override
         public void onCompleted() {
             Log.i(TAG,"OK");
-            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentPage-1));
-            updateUI();
+//            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentNewsPage-1));
+//            updateUI();
         }
 
         @Override
         public void onError(Throwable e) {
             Log.i(TAG,"ERROR");
-            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentPage-1));
-            updateUI();
+//            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentNewsPage-1));
+//            updateUI();
         }
 
         @Override
         public void onNext(List<NewItem> newItems) {
             NewItemDaoImpl.instance.addNewItemEntities(newItems);
+            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentNewsPage-1));
+            updateUI();
             //如果成功获取到，那么就直接显示呗
             Log.i(TAG,"onNext");
         }

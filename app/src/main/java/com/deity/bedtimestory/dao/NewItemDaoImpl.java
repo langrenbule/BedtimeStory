@@ -27,7 +27,7 @@ public class NewItemDaoImpl implements NewItemDao {
                 NewItemEntity result = Realm.getDefaultInstance().where(NewItemEntity.class).equalTo("title",entity.getTitle()).findFirst();
                 if (null==result){
                     addNewItemEntity(entity);
-                    System.out.println("entity>>. type"+entity.getNewsType());
+                    System.out.println("Add title>>>"+entity.getTitle());
                 }
             }
         }
@@ -52,6 +52,7 @@ public class NewItemDaoImpl implements NewItemDao {
     /**需要在主线程上调用*/
     @Override
     public List<NewItemEntity> queryNewItemEntities(int newsType,int currentPage) {
+        System.out.println("获取数据中....当前页面>>>"+currentPage);
         RealmResults<NewItemEntity> queryResult = Realm.getDefaultInstance().where(NewItemEntity.class).equalTo("newsType",newsType).findAll();
         int offset = SIZE_PER_PAGE*currentPage;
         //1.如果总数量大于偏移量并且大于Params.SIZE_PER_PAGE*currentPage+ Params.SIZE_PER_PAGE
