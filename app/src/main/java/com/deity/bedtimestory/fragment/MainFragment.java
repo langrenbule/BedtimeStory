@@ -195,7 +195,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             public void call(Subscriber<? super List<NewItem>> subscriber) {
                 List<NewItem> newItems = requestNetWorkData(destUrl, currentPage);
                 subscriber.onNext(newItems);
-                subscriber.onCompleted();
+                subscriber.onCompleted();//这个会自动取消监听
             }
         }).subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
