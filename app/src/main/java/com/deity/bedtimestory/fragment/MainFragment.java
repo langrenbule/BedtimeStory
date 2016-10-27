@@ -216,8 +216,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         @Override
         public void onError(Throwable e) {
             Log.i(TAG,"ERROR");
-//            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentNewsPage-1));
-//            updateUI();
+            updateUI(null);
         }
 
         @Override
@@ -231,7 +230,9 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     };
 
     public void updateUI(List<NewItemEntity> mDatas){
-        mTotalDatas.addAll(mDatas);
+        if (null!=mDatas) {
+            mTotalDatas.addAll(mDatas);
+        }
         if (mTotalDatas.isEmpty()){
             reloadImag.setVisibility(View.VISIBLE);
         }else {
