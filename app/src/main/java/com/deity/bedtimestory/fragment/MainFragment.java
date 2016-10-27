@@ -123,6 +123,7 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 Intent intent = new Intent(getActivity(), NewsContentActivity.class);
                 intent.putExtra("url", data.getLink());
                 intent.putExtra("imageUrl", data.getImgLink());
+                intent.putExtra("newsTitle", data.getTitle());
                 startActivity(intent);
             }
         });

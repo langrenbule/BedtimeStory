@@ -63,14 +63,10 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("这是标题");
         mNewItemBiz = new NewItemBiz();
-
         Bundle extras = getIntent().getExtras();
+        collapsingToolbar.setTitle(extras.getString("newsTitle"));
         url = extras.getString("url");
-        System.out.println("读取的地址:"+url);
-
-
         String imageUrl = extras.getString("imageUrl");
         if(!TextUtils.isEmpty(imageUrl)){
             Glide.with(this).load(imageUrl).into(backdrop);

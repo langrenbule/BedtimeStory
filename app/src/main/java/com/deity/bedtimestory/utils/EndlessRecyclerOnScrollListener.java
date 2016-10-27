@@ -28,14 +28,12 @@ public abstract class EndlessRecyclerOnScrollListener extends
         firstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
 
         if (loading) {
-            if (totalItemCount >= previousTotal) {
-                if (totalItemCount==previousTotal) currentPage--;//如果相等，不应该往上计算，因为存在加载失败的情况，滑动页面，currentPage一直往上累加的问题
+            if (totalItemCount > previousTotal) {
                 loading = false;
                 previousTotal = totalItemCount;
             }
         }
-        if (!loading
-                && (totalItemCount - visibleItemCount) <= firstVisibleItem) {
+        if (!loading&& (totalItemCount - visibleItemCount) <= firstVisibleItem) {
             currentPage++;
             onLoadMore(currentPage);
             loading = true;
