@@ -88,7 +88,7 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
 //                imageLoader.displayImage(news.getImageLink(), holder.mImageView, options);
                 break;
             case NewsType.TITLE:
-                holder.mTextView.setText(news.getTitle());
+//                holder.mTextView.setText(news.getTitle());
                 break;
             case NewsType.SUMMARY:
                 holder.mTextView.setText(news.getSummary());

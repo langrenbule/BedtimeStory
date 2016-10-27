@@ -10,9 +10,10 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:lineSpacingExtra="5dp"
-        android:padding="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:text=""
-        android:textColor="@color/nomalGray"
-        android:textSize="14sp" />
+        android:textColor="@color/buttom_buttom"
+        android:textSize="15sp" />
 
 </LinearLayout>
