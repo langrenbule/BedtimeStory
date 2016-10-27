@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.deity.bedtimestory.NewsContentActivity;
 import com.deity.bedtimestory.R;
@@ -215,8 +216,9 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         @Override
         public void onError(Throwable e) {
-            Log.i(TAG,"ERROR");
+            Log.i(TAG,">>>>ERROR");
             updateUI(null);
+            Toast.makeText(getActivity(),"好像到底了!",Toast.LENGTH_SHORT).show();
         }
 
         @Override

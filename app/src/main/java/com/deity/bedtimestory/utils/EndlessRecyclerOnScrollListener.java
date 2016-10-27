@@ -29,6 +29,7 @@ public abstract class EndlessRecyclerOnScrollListener extends
 
         if (loading) {
             if (totalItemCount >= previousTotal) {
+                if (totalItemCount==previousTotal) currentPage--;//如果相等，不应该往上计算，因为存在加载失败的情况，滑动页面，currentPage一直往上累加的问题
                 loading = false;
                 previousTotal = totalItemCount;
             }
