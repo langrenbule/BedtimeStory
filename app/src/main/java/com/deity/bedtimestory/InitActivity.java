@@ -1,8 +1,8 @@
 package com.deity.bedtimestory;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
@@ -13,7 +13,7 @@ import com.baidu.mobads.SplashAdListener;
 /**
  * 实时开屏，广告实时请求并且立即展现
  */
-public class InitActivity extends Activity {
+public class InitActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class InitActivity extends Activity {
                 // 设置开屏可接受点击时，该回调可用
             }
         };
-        String adPlaceId = "2505609"; // 重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
+        String adPlaceId = "2562948"; // 重要：请填上您的广告位ID，代码位错误会导致无法请求到广告
         new SplashAd(this, adsParent, listener, adPlaceId, true);
     }
 

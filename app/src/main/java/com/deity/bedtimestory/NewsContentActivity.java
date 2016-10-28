@@ -19,6 +19,7 @@ import com.deity.bedtimestory.adapter.NewContentAdapter;
 import com.deity.bedtimestory.entity.News;
 import com.deity.bedtimestory.network.NewItemBiz;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -55,6 +56,12 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         setContentView(R.layout.news_content);
         ButterKnife.bind(this);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NewsContentActivity.this.finish();
+            }
+        });
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -105,7 +112,6 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
                     Log.i(TAG,"ERROR"+e.getMessage());
                 }
                 subscriber.onNext(mDatas);
-                subscriber.onCompleted();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
     }
@@ -128,13 +134,17 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         @Override
         public void onNext(List<News> newItems) {
             Log.i(TAG,"onNext");
-            try {
-                mDatas = newItems;
-                mAdapter.setData(mDatas);
-            } catch (Exception e) {
-                //
-                e.printStackTrace();
+            if (null==newItems||newItems.isEmpty()){
+                newItems = new ArrayList<>();
+                News news = new News();
+                news.setType(2);
+                news.setSummary("加载失败，请下拉刷新重新加载！");
+                newItems.add(news);
             }
+            mDatas = newItems;
+            mAdapter.setData(mDatas);
+            mAdapter.notifyDataSetChanged();
+            refresh_layout.setRefreshing(false);
         }
     };
 

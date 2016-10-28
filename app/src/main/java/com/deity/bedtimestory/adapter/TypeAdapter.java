@@ -12,7 +12,7 @@ import com.deity.bedtimestory.fragment.MainFragment;
  * Created by fengwenhua on 2016/4/12.
  */
 public class TypeAdapter extends FragmentPagerAdapter {
-    private final static String[] MY_TITLES ={"人物传记","人生路程","情感故事","成长经历","为人处世","职场法则","环球视野","青春无悔"};
+    private final static String[] MY_TITLES ={"人物传记","人生路程","情感故事","成长经历","为人处世","职场法则","环球视野","青春无悔","日常生活","人生智慧","生活乐趣","作文素材"};
 
     public TypeAdapter(FragmentManager fm) {
         super(fm);

@@ -10,7 +10,7 @@ public class Params {
 
     public static final int SIZE_PER_PAGE=13;//每页的请求数量
 
-    public static enum NewType{
+    public enum NewType{
         NEW_RENWU(0,TargetUrl.url_renwu),
         NEW_RENSHENG(1,TargetUrl.url_rensheng),
         NEW_QINGGAN(2,TargetUrl.url_qinggan),
@@ -18,7 +18,12 @@ public class Params {
         NEW_CHUSHI(4,TargetUrl.url_chushi),
         NEW_ZHICHANG(5,TargetUrl.url_zhichang),
         NEW_SHIYE(6,TargetUrl.url_shiye),
-        NEW_QINGCHUN(7,TargetUrl.url_qingchun);
+        NEW_QINGCHUN(7,TargetUrl.url_qingchun),
+        NEW_SHENGHUO(8,TargetUrl.url_shenghuo),
+        NEW_ZHIHUI(9,TargetUrl.url_zhihui),
+        NEW_LEHUO(10,TargetUrl.url_lehuo),
+        NEW_ZUOWENSUCAI(11,TargetUrl.url_zuowensucai);
+
 
         NewType(int code,String destUrl){
             this.code = code;
@@ -62,6 +67,10 @@ public class Params {
         public static String url_zhichang="http://www.85nian.net/zhichang/page/";
         public static String url_shiye="http://www.85nian.net/shiye/page/";
         public static String url_qingchun="http://www.85nian.net/qingchun/page/";
+        public static String url_shenghuo="http://www.85nian.net/shenghuo/page/";
+        public static String url_zhihui="http://www.85nian.net/zhihui/page/";
+        public static String url_lehuo="http://www.85nian.net/lehuo/page/";
+        public static String url_zuowensucai="http://www.85nian.net/zuowensucai/page/";
 
         public static SparseArray<String> mUrl = new SparseArray<>();
         static{
@@ -73,6 +82,10 @@ public class Params {
             mUrl.put(5,url_zhichang);
             mUrl.put(6,url_shiye);
             mUrl.put(7,url_qingchun);
+            mUrl.put(8,url_shenghuo);
+            mUrl.put(9,url_zhihui);
+            mUrl.put(10,url_lehuo);
+            mUrl.put(11,url_zuowensucai);
         }
     }
 }
