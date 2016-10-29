@@ -14,7 +14,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 3
-        versionName "2.1.00"
+        versionName "DT_READ_2.1.00"
     }
     buildTypes {
         release {
