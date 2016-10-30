@@ -55,16 +55,16 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_content);
         ButterKnife.bind(this);
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NewsContentActivity.this.finish();
             }
         });
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         refresh_layout = (SwipeRefreshLayout) this.findViewById(R.id.refresh_layout);
         refresh_layout.setOnRefreshListener(this);
 
