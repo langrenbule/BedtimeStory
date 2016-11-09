@@ -20,4 +20,9 @@ public class ExampleUnitTest {
         String baseUrl = "http://www.mamabaobao.com/portal.php?mod=list&catid=95&page=";
         TechBabyBiz.getInstance().getArticleItems(baseUrl,2);
     }
+    @Test
+    public void testGetNewBornArticleContents(){
+        String baseUrl = "http://www.mamabaobao.com/article-2984-1.html";
+        TechBabyBiz.getInstance().getArticleContents(baseUrl);
+    }
 }
