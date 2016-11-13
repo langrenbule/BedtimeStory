@@ -128,11 +128,11 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         mAdapter.setRecycleViewOnClickListener(new NewBronItemAdapter.RecycleViewOnClickListener() {
             @Override
-            public void onItemClick(View view, NewItemEntity data) {
+            public void onItemClick(View view, NewBornItemEntity data) {
                 Intent intent = new Intent(getActivity(), NewsContentActivity.class);
-                intent.putExtra("url", data.getLink());
-                intent.putExtra("imageUrl", data.getImgLink());
-                intent.putExtra("newsTitle", data.getTitle());
+                intent.putExtra("url", data.getNewBornArticleUrl());
+                intent.putExtra("imageUrl", data.getNewBornImageUrl());
+                intent.putExtra("newsTitle", data.getNewBornTitle());
                 startActivity(intent);
             }
         });

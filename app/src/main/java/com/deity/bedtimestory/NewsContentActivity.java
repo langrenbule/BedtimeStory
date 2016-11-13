@@ -16,8 +16,13 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.deity.bedtimestory.adapter.NewContentAdapter;
+import com.deity.bedtimestory.dao.NewBornContentEntity;
+import com.deity.bedtimestory.dao.NewBornItemEntity;
+import com.deity.bedtimestory.dao.NewBronContent;
 import com.deity.bedtimestory.entity.News;
+import com.deity.bedtimestory.network.DataBiz;
 import com.deity.bedtimestory.network.NewItemBiz;
+import com.deity.bedtimestory.network.TechBabyBiz;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +41,7 @@ import static com.deity.bedtimestory.R.id.content_items;
 public class NewsContentActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView mListView;
-    private List<News> mDatas;
+    private List<NewBornContentEntity> mDatas;
     @Bind(R.id.backdrop) public ImageView backdrop;
     private static final String TAG = NewsContentActivity.class.getSimpleName();
     private Subscription subscription;
@@ -45,7 +50,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
      * 该页面的url
      */
     private String url;
-    private NewItemBiz mNewItemBiz;
+    private DataBiz<NewBornItemEntity,NewBronContent> mNewItemBiz;
 
     private NewContentAdapter mAdapter;
     private SwipeRefreshLayout refresh_layout;
@@ -70,7 +75,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        mNewItemBiz = new NewItemBiz();
+        mNewItemBiz = TechBabyBiz.getInstance();
         Bundle extras = getIntent().getExtras();
         collapsingToolbar.setTitle(extras.getString("newsTitle"));
         url = extras.getString("url");
@@ -107,7 +112,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
             @Override
             public void call(Subscriber<? super List<News>> subscriber) {
                 try {
-                    mDatas = mNewItemBiz.getArticleContents(destUrl).getNewses();
+                    mDatas = mNewItemBiz.getArticleContents(destUrl).getNewBornContentEntities();
                 }catch (Exception e){
                     Log.i(TAG,"ERROR"+e.getMessage());
                 }
@@ -116,7 +121,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
     }
 
-    Subscriber<List<News>> subscriber = new Subscriber<List<News>>() {
+    Subscriber<List<News>> subscriber = new Subscriber<List<NewBornContentEntity>>() {
         @Override
         public void onCompleted() {
             Log.i(TAG,"OK");
@@ -132,7 +137,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         }
 
         @Override
-        public void onNext(List<News> newItems) {
+        public void onNext(List<NewBornContentEntity> newItems) {
             Log.i(TAG,"onNext");
             if (null==newItems||newItems.isEmpty()){
                 newItems = new ArrayList<>();

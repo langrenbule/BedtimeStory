@@ -14,6 +14,8 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * http://www.mamabaobao.com/portal.php
@@ -27,6 +29,15 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
 
     public static TechBabyBiz getInstance(){
         return instance;
+    }
+
+    public String getImageUrlContent(String wait2match){
+        Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
+        Matcher matcher = pattern.matcher(wait2match);
+        if (matcher.find()){
+            return matcher.group();
+        }
+        return "";
     }
 
     public List<NewBornItemEntity> getArticleItems(String baseUrl, int currentPage){
@@ -43,7 +54,7 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
             entity.setNewBornTitle(newBornTitle.text());//获取标题
             entity.setNewBornArticleUrl(newBornTitle.attr("href"));
             Element imageLink = element.select("div.img_content").select("a>div").first();
-            entity.setNewBornImageUrl(imageLink.attr("style"));//获取图片地址
+            entity.setNewBornImageUrl(getImageUrlContent(imageLink.attr("style")));//获取图片地址
             Element newBronDescription = element.select("div.text_content").select("p").first();
             entity.setNewBornDescription(newBronDescription.text());
             Element newBronData = element.select("div.text_content").select("label").first();

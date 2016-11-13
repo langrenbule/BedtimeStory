@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.deity.bedtimestory.R;
+import com.deity.bedtimestory.dao.NewBornContentEntity;
 import com.deity.bedtimestory.entity.News;
 import com.deity.bedtimestory.entity.News.NewsType;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -26,7 +27,7 @@ import java.util.List;
 
 public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.ViewHolder> {
     private LayoutInflater mInflater;
-    private List<News> mDatas = new ArrayList<News>();
+    private List<NewBornContentEntity> mDatas = new ArrayList<>();
 
     private ImageLoader imageLoader = ImageLoader.getInstance();
     private DisplayImageOptions options;
@@ -41,7 +42,7 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
                 .displayer(new FadeInBitmapDisplayer(300)).build();
     }
 
-    public void setData(List<News> datas) {
+    public void setData(List<NewBornContentEntity> datas) {
         mDatas = datas;
     }
 
@@ -82,7 +83,7 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        News news = mDatas.get(position);
+        NewBornContentEntity news = mDatas.get(position);
         switch (news.getType()){
             case NewsType.IMG:
 //                imageLoader.displayImage(news.getImageLink(), holder.mImageView, options);

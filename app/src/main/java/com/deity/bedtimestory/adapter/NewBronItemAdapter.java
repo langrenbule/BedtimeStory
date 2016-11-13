@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.deity.bedtimestory.R;
 import com.deity.bedtimestory.dao.NewBornItemEntity;
-import com.deity.bedtimestory.dao.NewItemEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +33,12 @@ public class NewBronItemAdapter extends RecyclerView.Adapter<NewBronItemAdapter.
     @Override
     public void onClick(View view) {
         if (null!=recycleViewOnClickListener){
-            recycleViewOnClickListener.onItemClick(view, (NewItemEntity) view.getTag());
+            recycleViewOnClickListener.onItemClick(view, (NewBornItemEntity) view.getTag());
         }
     }
 
     public interface RecycleViewOnClickListener{
-        void onItemClick(View view,NewItemEntity data);
+        void onItemClick(View view,NewBornItemEntity data);
     }
 
     public void setRecycleViewOnClickListener(RecycleViewOnClickListener recycleViewOnClickListener) {
