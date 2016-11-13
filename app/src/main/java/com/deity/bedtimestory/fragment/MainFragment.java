@@ -20,13 +20,15 @@ import android.widget.Toast;
 import com.deity.bedtimestory.NewsContentActivity;
 import com.deity.bedtimestory.R;
 import com.deity.bedtimestory.adapter.HeaderViewRecyclerAdapter;
-import com.deity.bedtimestory.adapter.NewItemsAdapter;
-import com.deity.bedtimestory.dao.NewItemDaoImpl;
+import com.deity.bedtimestory.adapter.NewBronItemAdapter;
+import com.deity.bedtimestory.dao.NewBornItemEntity;
+import com.deity.bedtimestory.dao.NewBronContent;
 import com.deity.bedtimestory.dao.NewItemEntity;
 import com.deity.bedtimestory.data.Params;
-import com.deity.bedtimestory.entity.NewItem;
+import com.deity.bedtimestory.entity.NewBornItemType;
 import com.deity.bedtimestory.event.NetWorkEvent;
-import com.deity.bedtimestory.network.NewItemBiz;
+import com.deity.bedtimestory.network.DataBiz;
+import com.deity.bedtimestory.network.TechBabyBiz;
 import com.deity.bedtimestory.utils.EndlessRecyclerOnScrollListener;
 
 import org.greenrobot.eventbus.EventBus;
@@ -58,31 +60,38 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      */
     public SwipeRefreshLayout refreshLayout;
     public ImageView reloadImag;
-    private NewItemBiz mNewItemBiz;
+    private DataBiz<NewBornItemEntity,NewBronContent> mNewItemBiz;
     HeaderViewRecyclerAdapter headerViewRecyclerAdapter;
     /**
      * 数据
      */
     private List<NewItemEntity> mDatas;
-    private List<NewItemEntity> mTotalDatas = new ArrayList<>();
+    private List<NewBornItemEntity> mTotalDatas = new ArrayList<>();
     /**
      * 数据适配器
      */
-    private NewItemsAdapter mAdapter;
+    private NewBronItemAdapter mAdapter;
     /**
      * 当前页面
      */
     public int currentNewsPage = 1;
 
     public MainFragment() {
-        mNewItemBiz = new NewItemBiz();
+        mNewItemBiz = TechBabyBiz.getInstance();
     }
 
     @SuppressLint("ValidFragment")
     public MainFragment(Params.NewType newsType) {
         this.targetType = newsType.getDestUrl();
         this.newsType = newsType.getCode();
-        mNewItemBiz = new NewItemBiz();
+        mNewItemBiz = TechBabyBiz.getInstance();
+    }
+
+    @SuppressLint("ValidFragment")
+    public MainFragment(NewBornItemType newsType) {
+        this.targetType = newsType.getTargetUrl();
+        this.newsType = newsType.getCode();
+        mNewItemBiz = TechBabyBiz.getInstance();
     }
 
     @Override
@@ -113,11 +122,11 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         });
         refreshLayout.setOnRefreshListener(this);
-        mAdapter = new NewItemsAdapter(getActivity());
+        mAdapter = new NewBronItemAdapter(getActivity());
         headerViewRecyclerAdapter = new HeaderViewRecyclerAdapter(mAdapter);
         content_items.setAdapter(headerViewRecyclerAdapter);
 
-        mAdapter.setRecycleViewOnClickListener(new NewItemsAdapter.RecycleViewOnClickListener() {
+        mAdapter.setRecycleViewOnClickListener(new NewBronItemAdapter.RecycleViewOnClickListener() {
             @Override
             public void onItemClick(View view, NewItemEntity data) {
                 Intent intent = new Intent(getActivity(), NewsContentActivity.class);
@@ -164,13 +173,13 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     /**
      * 请求网络数据
      */
-    public List<NewItem> requestNetWorkData(String targetUrl, int currentPage) {
-        List<NewItem> newsItems = null;
+    public List<NewBornItemEntity> requestNetWorkData(String targetUrl, int currentPage) {
+        List<NewBornItemEntity> newsItems = null;
         try {
             newsItems = mNewItemBiz.getArticleItems(targetUrl, currentPage);
-            if (null != newsItems) {
-                NewItemDaoImpl.instance.addNewItemEntities(newsItems);
-            }
+//            if (null != newsItems) {
+//                NewItemDaoImpl.instance.addNewItemEntities(newsItems);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("request Exception>>>" + e.getMessage());
@@ -197,17 +206,17 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     public void getNewItems(final String destUrl, final int currentPage){
-        subscription = Observable.create(new Observable.OnSubscribe<List<NewItem>>() {
+        subscription = Observable.create(new Observable.OnSubscribe<List<NewBornItemEntity>>() {
             @Override
-            public void call(Subscriber<? super List<NewItem>> subscriber) {
-                List<NewItem> newItems = requestNetWorkData(destUrl, currentPage);
+            public void call(Subscriber<? super List<NewBornItemEntity>> subscriber) {
+                List<NewBornItemEntity> newItems = requestNetWorkData(destUrl, currentPage);
                 subscriber.onNext(newItems);
             }
         }).subscribeOn(Schedulers.io())
           .observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
     }
 
-    Subscriber<List<NewItem>> subscriber = new Subscriber<List<NewItem>>() {
+    Subscriber<List<NewBornItemEntity>> subscriber = new Subscriber<List<NewBornItemEntity>>() {
         @Override
         public void onCompleted() {
             Log.i(TAG,"OK");
@@ -223,16 +232,16 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         @Override
-        public void onNext(List<NewItem> newItems) {
-            NewItemDaoImpl.instance.addNewItemEntities(newItems);
-            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentNewsPage-1));
-            updateUI(mDatas);
+        public void onNext(List<NewBornItemEntity> newItems) {
+//            NewItemDaoImpl.instance.addNewItemEntities(newItems);
+//            mDatas = NewItemDaoImpl.instance.queryNewItemEntities(newsType,(currentNewsPage-1));
+            updateUI(newItems);
             //如果成功获取到，那么就直接显示呗
             Log.i(TAG,"onNext");
         }
     };
 
-    public void updateUI(List<NewItemEntity> mDatas){
+    public void updateUI(List<NewBornItemEntity> mDatas){
         if (null!=mDatas) {
             mTotalDatas.addAll(mDatas);
         }

@@ -2,6 +2,7 @@ package com.deity.bedtimestory.network;
 
 import com.deity.bedtimestory.dao.NewBornContentEntity;
 import com.deity.bedtimestory.dao.NewBornItemEntity;
+import com.deity.bedtimestory.dao.NewBronContent;
 import com.deity.bedtimestory.data.Params;
 import com.deity.bedtimestory.entity.NewBornContentType;
 
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by Deity on 2016/11/8.
  */
 
-public class TechBabyBiz {
+public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
     private static TechBabyBiz instance = new TechBabyBiz();
 
     private TechBabyBiz(){}
@@ -57,9 +58,10 @@ public class TechBabyBiz {
         return newItemList;
     }
 
-    public List<NewBornContentEntity> getArticleContents(String baseUrl){
+    public NewBronContent getArticleContents(String baseUrl){
         Document document = getUrlDoc(baseUrl);
-        List<NewBornContentEntity> newBornContentEntityList = new ArrayList<>();
+//        List<NewBornContentEntity> newBornContentEntityList = new ArrayList<>();
+        NewBronContent content = new NewBronContent();
         if (null==document) return null;
         Element articleElement = document.select("div.bm.vw").first();
         if (null==articleElement) return null;
@@ -68,7 +70,7 @@ public class TechBabyBiz {
             NewBornContentEntity entity = new NewBornContentEntity();
             entity.setNewBornContent(elementTitle.text());
             entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_TITLE.getCode());
-            newBornContentEntityList.add(entity);
+            content.getNewBornContentEntities().add(entity);
             System.out.println(entity.getNewBornContent());
         }
         Element elementSummary = articleElement.select("div.h.hm").select("p.xg1").first();
@@ -76,7 +78,7 @@ public class TechBabyBiz {
             NewBornContentEntity entity = new NewBornContentEntity();
             entity.setNewBornContent(elementSummary.text());
             entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_SUMMARY.getCode());
-            newBornContentEntityList.add(entity);
+            content.getNewBornContentEntities().add(entity);
             System.out.println(entity.getNewBornContent());
         }
         Element elementDescription = articleElement.select("div.s").select("div").first();
@@ -84,7 +86,7 @@ public class TechBabyBiz {
             NewBornContentEntity entity = new NewBornContentEntity();
             entity.setNewBornContent(elementDescription.text());
             entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_DESCRIPTION.getCode());
-            newBornContentEntityList.add(entity);
+            content.getNewBornContentEntities().add(entity);
             System.out.println(entity.getNewBornContent());
         }
 
@@ -97,21 +99,20 @@ public class TechBabyBiz {
                 if (null!=elementImage) {
                     entity.setNewBornContent(elementImage.attr("src"));
                     entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_IMAGEURL.getCode());
-                    newBornContentEntityList.add(entity);
+                    content.getNewBornContentEntities().add(entity);
                     System.out.println(entity.getNewBornContent());
                 }
                 if (null!=element.text()||!element.text().equals("")){
                     entity.setNewBornContent(element.text());
                     entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_CONTENT.getCode());
-                    newBornContentEntityList.add(entity);
+                    content.getNewBornContentEntities().add(entity);
                     System.out.println(entity.getNewBornContent());
                 }
 
             }
         }
 
-
-    ;    return newBornContentEntityList;
+    ;    return content;
     }
 
 

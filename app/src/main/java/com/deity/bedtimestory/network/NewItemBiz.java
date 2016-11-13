@@ -19,7 +19,7 @@ import java.util.List;
  * http://v.gxdxw.cn/
  * Created by Deity on 2016/4/13.
  */
-public class NewItemBiz {
+public class NewItemBiz implements DataBiz<NewItem,NewsDto>{
 
     public List<NewItem> getArticleItems(String baseUrl, int currentPage){
         String correctUrl = baseUrl+ currentPage;
@@ -106,59 +106,8 @@ public class NewItemBiz {
      * @return
      * @throws Exception
      */
-//    public NewsDto getNews(String urlStr)throws Exception {
-//        NewsDto newsDto = new NewsDto();
-//        List<News> newses = new ArrayList();
-//        Document doc = getUrlDoc(urlStr);
-//        Element detailEle = doc.select(".left .detail").get(0);
-//        Element titleEle = detailEle.select("h1.title").get(0);
-//        News news = new News();
-//        news.setTitle(titleEle.text());
-//        news.setType(1);
-//        newses.add(news);
-//
-//        Element summaryEle = detailEle.select("div.summary").get(0);
-//        news = new News();
-//        news.setSummary(summaryEle.text());
-//        newses.add(news);
-//
-//        Element contentEle = detailEle.select("div.con.news_content").get(0);
-//        Elements childrenEle = contentEle.children();
-//        for (Element child : childrenEle) {
-//            Elements imgEles = child.getElementsByTag("img");
-//            if (imgEles.size() > 0) {
-//                for (Element imgEle : imgEles) {
-//                    if (!imgEle.attr("src").equals("")) {
-//                        news = new News();
-//                        news.setImageLink(imgEle.attr("src"));
-//                        newses.add(news);
-//                    }
-//                }
-//            }
-//            imgEles.remove();
-//            if (!child.text().equals("")) {
-//                news = new News();
-//                news.setType(3);
-//                try {
-//                    if (child.children().size() == 1) {
-//                        Element cc = child.child(0);
-//                        if (cc.tagName().equals("b")) {
-//                            news.setType(5);
-//                        }
-//                    }
-//                } catch (IndexOutOfBoundsException e) {
-//                    e.printStackTrace();
-//                }
-//                news.setContent(child.outerHtml());
-//                newses.add(news);
-//            }
-//        }
-//
-//        newsDto.setNewses(newses);
-//        return newsDto;
-//    }
 
-    public NewsDto getNews(String urlStr)throws Exception {
+    public NewsDto getArticleContents(String urlStr)throws Exception {
         NewsDto newsDto = new NewsDto();
         List<News> newses = new ArrayList();
         Document doc = getUrlDoc(urlStr);

@@ -6,24 +6,26 @@ package com.deity.bedtimestory.entity;
  */
 
 public enum NewBornItemType {
-    NEW_BORN_CONTENT_TYPE_10月怀胎(0),
-    NEW_BORN_CONTENT_TYPE_一朝分娩(1),
-    NEW_BORN_CONTENT_TYPE_准爸爸读本(2),
-    NEW_BORN_CONTENT_TYPE_孕前准备(3),
-    NEW_BORN_CONTENT_TYPE_孕早期(4),
-    NEW_BORN_CONTENT_TYPE_孕中晚期(5),
-    NEW_BORN_CONTENT_TYPE_6月内(6),
-    NEW_BORN_CONTENT_TYPE_12月内(7),
-    NEW_BORN_CONTENT_TYPE_幼儿心理(8),
-    NEW_BORN_CONTENT_TYPE_1到4岁(9),
-    NEW_BORN_CONTENT_TYPE_生活照顾(10),
-    NEW_BORN_CONTENT_TYPE_营养健康(11),
-    NEW_BORN_CONTENT_TYPE_亲子共读(12);
+    十月怀胎(0,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    一朝分娩(1,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    准爸爸读本(2,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    孕前准备(3,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    孕早期(4,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    孕中晚期(5,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    六月宝宝(6,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    周年宝宝(7,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    幼儿心理(8,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    小五神童(9,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    生活照顾(10,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    营养健康(11,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page="),
+    亲子共读(12,"http://www.mamabaobao.com/portal.php?mod=list&catid=104&page=");
 
     private int code;
+    private String targetUrl;
 
-    NewBornItemType(int code){
+    NewBornItemType(int code,String targetUrl){
         this.code = code;
+        this.targetUrl = targetUrl;
     }
 
     public static NewBornItemType whichNewBornContentType(int code){
@@ -32,9 +34,15 @@ public enum NewBornItemType {
                 return type;
             }
         }
-        return NewBornItemType.NEW_BORN_CONTENT_TYPE_10月怀胎;
+        return NewBornItemType.十月怀胎;
     }
 
 
+    public String getTargetUrl() {
+        return targetUrl;
+    }
 
+    public int getCode() {
+        return code;
+    }
 }

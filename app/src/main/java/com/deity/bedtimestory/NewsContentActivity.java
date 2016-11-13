@@ -107,7 +107,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
             @Override
             public void call(Subscriber<? super List<News>> subscriber) {
                 try {
-                    mDatas = mNewItemBiz.getNews(destUrl).getNewses();
+                    mDatas = mNewItemBiz.getArticleContents(destUrl).getNewses();
                 }catch (Exception e){
                     Log.i(TAG,"ERROR"+e.getMessage());
                 }
