@@ -62,11 +62,11 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
             Element newBronData = element.select("div.text_content").select("label").first();
             entity.setNewBornData(newBronData.text());
             newItemList.add(entity);
-            System.out.println("title>>>"+entity.getNewBornTitle()+
-                    "\n ArticleUrl>>>"+entity.getNewBornArticleUrl()+
-                    "\n data>>>"+entity.getNewBornData()+
-                    "\n desc>>>"+entity.getNewBornDescription()+
-                    "\n imageUrl>>>"+entity.getNewBornImageUrl());
+            //System.out.println("title>>>"+entity.getNewBornTitle()+
+//                    "\n ArticleUrl>>>"+entity.getNewBornArticleUrl()+
+//                    "\n data>>>"+entity.getNewBornData()+
+//                    "\n desc>>>"+entity.getNewBornDescription()+
+//                    "\n imageUrl>>>"+entity.getNewBornImageUrl());
         }
         return newItemList;
     }
@@ -84,7 +84,7 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
             entity.setNewBornContent(elementTitle.text());
             entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_TITLE.getCode());
             content.getNewBornContentEntities().add(entity);
-            System.out.println(entity.getNewBornContent());
+            //System.out.println(entity.getNewBornContent());
         }
         Element elementSummary = articleElement.select("div.h.hm").select("p.xg1").first();
         if (null!=elementSummary){
@@ -92,7 +92,7 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
             entity.setNewBornContent(elementSummary.text());
             entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_SUMMARY.getCode());
             content.getNewBornContentEntities().add(entity);
-            System.out.println(entity.getNewBornContent());
+            //System.out.println(entity.getNewBornContent());
         }
         Element elementDescription = articleElement.select("div.s").select("div").first();
         if (null!=elementDescription){
@@ -100,7 +100,7 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
             entity.setNewBornContent(elementDescription.text());
             entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_DESCRIPTION.getCode());
             content.getNewBornContentEntities().add(entity);
-            System.out.println(entity.getNewBornContent());
+            //System.out.println(entity.getNewBornContent());
         }
 
 //        Elements elementContents = articleElement.select("div.d").select("table>tbody>tr>td#article_content").first().children();
@@ -113,13 +113,13 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
                     entity.setNewBornContent(elementImage.attr("src"));
                     entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_IMAGEURL.getCode());
                     content.getNewBornContentEntities().add(entity);
-                    System.out.println(entity.getNewBornContent());
+                    //System.out.println(entity.getNewBornContent());
                 }
                 if (!TextUtils.isEmpty(element.text())){
                     entity.setNewBornContent(element.text());
                     entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_CONTENT.getCode());
                     content.getNewBornContentEntities().add(entity);
-                    System.out.println(entity.getNewBornContent());
+                    //System.out.println(entity.getNewBornContent());
                 }
 
             }
@@ -138,7 +138,7 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
             doc = conneciton.get();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("链接目标地址失败:"+e.getMessage());
+            //System.out.println("链接目标地址失败:"+e.getMessage());
             return null;
         }
         return doc;
