@@ -16,6 +16,13 @@ android {
         versionCode 5
         versionName "DT_READ_2.1.00"
     }
+    productFlavors{
+        baby{
+            versionCode 1
+            versionName "DT_BABY_1.0.00"
+            applicationId "com.deity.newborn"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
