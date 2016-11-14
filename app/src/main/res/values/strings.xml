@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">杂志文摘</string>
+    <string name="app_name">孕育宝典</string>
 
 
     <string name="show_banner">显示横幅</string>
@@ -11,5 +11,5 @@
     <string name="load_splashad">下载开屏</string>
     <string name="show_splashad">展示开屏</string>
     <string name="btn_share">分享</string>
-    <string name="share_app">发现一个好应用,使用一个月后，发现自己的逼格都变高了O(∩_∩)O哈哈~!\n  http://www.wandoujia.com/apps/com.deity.bedtimestory</string>
+    <string name="share_app">宝妈必备利器,内含孕期准备、营养健康、幼儿心理、准爸爸等丰富的孕育知识,新技能轻松Get!\n  http://www.wandoujia.com/apps/com.deity.newborn</string>
 </resources>
