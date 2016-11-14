@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="杂志文摘,有你好看!"/>
+            android:text="孕育宝典,找到你想要的!"/>
     </RelativeLayout>
     <RelativeLayout android:id="@+id/adsRl"
         android:layout_height="fill_parent"
@@ -23,7 +23,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitCenter"
+            android:scaleType="fitXY"
             android:src="@drawable/init_pic"/>
     </RelativeLayout>
 </RelativeLayout>
