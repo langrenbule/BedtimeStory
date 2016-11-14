@@ -19,9 +19,8 @@ import com.deity.bedtimestory.adapter.NewContentAdapter;
 import com.deity.bedtimestory.dao.NewBornContentEntity;
 import com.deity.bedtimestory.dao.NewBornItemEntity;
 import com.deity.bedtimestory.dao.NewBronContent;
-import com.deity.bedtimestory.entity.News;
+import com.deity.bedtimestory.entity.NewBornContentType;
 import com.deity.bedtimestory.network.DataBiz;
-import com.deity.bedtimestory.network.NewItemBiz;
 import com.deity.bedtimestory.network.TechBabyBiz;
 
 import java.util.ArrayList;
@@ -108,9 +107,9 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
     }
 
     public void getNewItems(final String destUrl){
-        subscription = Observable.create(new Observable.OnSubscribe<List<News>>() {
+        subscription = Observable.create(new Observable.OnSubscribe<List<NewBornContentEntity>>() {
             @Override
-            public void call(Subscriber<? super List<News>> subscriber) {
+            public void call(Subscriber<? super List<NewBornContentEntity>> subscriber) {
                 try {
                     mDatas = mNewItemBiz.getArticleContents(destUrl).getNewBornContentEntities();
                 }catch (Exception e){
@@ -121,7 +120,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber);
     }
 
-    Subscriber<List<News>> subscriber = new Subscriber<List<NewBornContentEntity>>() {
+    Subscriber<List<NewBornContentEntity>> subscriber = new Subscriber<List<NewBornContentEntity>>() {
         @Override
         public void onCompleted() {
             Log.i(TAG,"OK");
@@ -141,9 +140,9 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
             Log.i(TAG,"onNext");
             if (null==newItems||newItems.isEmpty()){
                 newItems = new ArrayList<>();
-                News news = new News();
-                news.setType(2);
-                news.setSummary("加载失败，请下拉刷新重新加载！");
+                NewBornContentEntity news = new NewBornContentEntity();
+                news.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_CONTENT.getCode());
+                news.setNewBornContent("加载失败，请下拉刷新重新加载！");
                 newItems.add(news);
             }
             mDatas = newItems;

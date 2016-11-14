@@ -4,7 +4,7 @@ package com.deity.bedtimestory.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import com.deity.bedtimestory.R;
 import com.deity.bedtimestory.dao.NewBornContentEntity;
-import com.deity.bedtimestory.entity.News;
-import com.deity.bedtimestory.entity.News.NewsType;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -61,16 +59,16 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View convertView = null;
         switch (viewType){
-            case NewsType.TITLE:
+            case 1://NewBornContentType.NEW_BORN_CONTENT_TYPE_DESCRIPTION
                 convertView = mInflater.inflate(R.layout.news_content_title_item, null);
                 break;
-            case NewsType.SUMMARY:
+            case 2://NewBornContentType.NEW_BORN_CONTENT_TYPE_SUMMARY
                 convertView = mInflater.inflate(R.layout.news_content_summary_item, null);
                 break;
-            case NewsType.CONTENT:
+            case 3://NewBornContentType.NEW_BORN_CONTENT_TYPE_CONTENT
                 convertView = mInflater.inflate(R.layout.news_content_item, null);
                 break;
-            case NewsType.IMG:
+            case 0://NewBornContentType.NEW_BORN_CONTENT_IMAGEURL
                 convertView = mInflater.inflate(R.layout.news_content_img_item, null);
                 break;
             default://NewsType.BOLD_TITLE
@@ -82,44 +80,35 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
     }
 
     @Override
+    public int getItemViewType(int position) {
+        return mDatas.get(position).getNewBornType();
+    }
+
+    @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         NewBornContentEntity news = mDatas.get(position);
-        switch (news.getType()){
-            case NewsType.IMG:
-//                imageLoader.displayImage(news.getImageLink(), holder.mImageView, options);
+        if (TextUtils.isEmpty(news.getNewBornContent())) return;
+        switch (news.getNewBornType()){
+            case 0: //NewBornContentType.NEW_BORN_CONTENT_IMAGEURL.getCode()
+                imageLoader.displayImage(news.getNewBornContent(), holder.mImageView, options);
                 break;
-            case NewsType.TITLE:
-//                holder.mTextView.setText(news.getTitle());
+            case 1://NewBornContentType.NEW_BORN_CONTENT_TYPE_TITLE
+                holder.mTextView.setText(news.getNewBornContent());
                 break;
-            case NewsType.SUMMARY:
-                holder.mTextView.setText(news.getSummary());
+            case 2://NewBornContentType.NEW_BORN_CONTENT_TYPE_SUMMARY
+                holder.mTextView.setText(news.getNewBornContent());
                 break;
-            case NewsType.CONTENT:
-                holder.mTextView.setText(Html.fromHtml(news.getContent()));
+            case 3://NewBornContentType.NEW_BORN_CONTENT_TYPE_CONTENT
+                holder.mTextView.setText(news.getNewBornContent());
                 break;
-            case NewsType.BOLD_TITLE:
-                holder.mTextView.setText(Html.fromHtml(news.getContent()));
+            case 4://NewBornContentType.NEW_BORN_CONTENT_TYPE_TITLE
+                holder.mTextView.setText(news.getNewBornContent());
             default:
+                holder.mTextView.setText(news.getNewBornContent());
                 break;
         }
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        switch (mDatas.get(position).getType()) {
-            case NewsType.TITLE:
-                return 0;
-            case NewsType.SUMMARY:
-                return 1;
-            case NewsType.CONTENT:
-                return 2;
-            case NewsType.IMG:
-                return 3;
-            case NewsType.BOLD_TITLE:
-                return 4;
-        }
-        return -1;
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView mTextView;

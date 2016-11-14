@@ -1,5 +1,6 @@
 package com.deity.bedtimestory.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  */
 
 public class NewBronContent {
-    private List<NewBornContentEntity> newBornContentEntities;
+    private List<NewBornContentEntity> newBornContentEntities=new ArrayList<>();
     private String nextPageUrl;
 
     public List<NewBornContentEntity> getNewBornContentEntities() {

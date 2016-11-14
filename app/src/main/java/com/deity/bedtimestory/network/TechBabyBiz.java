@@ -1,5 +1,7 @@
 package com.deity.bedtimestory.network;
 
+import android.text.TextUtils;
+
 import com.deity.bedtimestory.dao.NewBornContentEntity;
 import com.deity.bedtimestory.dao.NewBornItemEntity;
 import com.deity.bedtimestory.dao.NewBronContent;
@@ -113,7 +115,7 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
                     content.getNewBornContentEntities().add(entity);
                     System.out.println(entity.getNewBornContent());
                 }
-                if (null!=element.text()||!element.text().equals("")){
+                if (!TextUtils.isEmpty(element.text())){
                     entity.setNewBornContent(element.text());
                     entity.setNewBornType(NewBornContentType.NEW_BORN_CONTENT_TYPE_CONTENT.getCode());
                     content.getNewBornContentEntities().add(entity);
