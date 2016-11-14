@@ -71,7 +71,7 @@ public class NewItemsAdapter extends RecyclerView.Adapter<NewItemsAdapter.ViewHo
         NewItemEntity data = newItems.get(position);
         holder.mTitle.setText(data.getTitle());
         holder.mContent.setText(data.getContent());
-        Glide.with(context).load(data.getImgLink()).into(holder.mImg);
+        Glide.with(context).load(data.getImgLink()).placeholder(R.drawable.ic_launcher).into(holder.mImg);
         holder.mDate.setText(data.getDate());
         holder.itemView.setTag(data);
     }

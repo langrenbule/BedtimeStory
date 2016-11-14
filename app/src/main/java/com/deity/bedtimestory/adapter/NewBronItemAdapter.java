@@ -71,7 +71,7 @@ public class NewBronItemAdapter extends RecyclerView.Adapter<NewBronItemAdapter.
         NewBornItemEntity data = newItems.get(position);
         holder.mTitle.setText(data.getNewBornTitle());
         holder.mContent.setText(data.getNewBornDescription());
-        Glide.with(context).load(data.getNewBornImageUrl()).into(holder.mImg);
+        Glide.with(context).load(data.getNewBornImageUrl()).placeholder(R.drawable.ic_launcher).into(holder.mImg);
         holder.mDate.setText(data.getNewBornData());
         holder.itemView.setTag(data);
     }

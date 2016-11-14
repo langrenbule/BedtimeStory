@@ -80,7 +80,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         url = extras.getString("url");
         String imageUrl = extras.getString("imageUrl");
         if(!TextUtils.isEmpty(imageUrl)){
-            Glide.with(this).load(imageUrl).into(backdrop);
+            Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_launcher).into(backdrop);
         }else {
             Glide.with(this).load(R.drawable.ic_launcher).into(backdrop);
         }
