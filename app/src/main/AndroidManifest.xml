@@ -25,6 +25,9 @@
             android:name="BaiduMobAd_APP_ID"
             android:value="ebe3dbf8" />
 
+        <meta-data android:value="582afe837666133dc6000bbc" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="NewBorn_Channel" android:name="UMENG_CHANNEL"/>
+
         <activity
             android:name=".InitActivity"
             android:configChanges="keyboardHidden|orientation"

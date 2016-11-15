@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 
 import com.baidu.mobads.SplashAd;
 import com.baidu.mobads.SplashAdListener;
+import com.umeng.analytics.MobclickAgent;
 
 
 /**
@@ -72,6 +73,7 @@ public class InitActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         canJumpImmediately = false;
+        MobclickAgent.onPause(this);
     }
 
     /**
@@ -89,6 +91,11 @@ public class InitActivity extends AppCompatActivity {
             jumpWhenCanClick();
         }
         canJumpImmediately = true;
+        MobclickAgent.onResume(this);       //统计时长
     }
+
+
+
+
 
 }

@@ -7,6 +7,7 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.umeng.analytics.MobclickAgent;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -21,6 +22,7 @@ public class MyApplication extends Application{
     public void onCreate() {
         super.onCreate();
         instance = this;
+        MobclickAgent.setScenarioType(getApplicationContext(), MobclickAgent.EScenarioType.E_UM_NORMAL);
         initImageLoader();
         initDB();
     }
@@ -45,7 +47,7 @@ public class MyApplication extends Application{
                 .memoryCacheSize(20* 1024 * 1024)
                 .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
                 .imageDownloader(new BaseImageDownloader(getApplicationContext(), 5 * 1000, 30 * 1000)) // connectTimeout (5 s), readTimeout (30 s)超时时间
-                .writeDebugLogs() // Remove for release app
+//                .writeDebugLogs() // Remove for release app
                 .build();//开始构建
         ImageLoader.getInstance().init(config);//全局初始化此配置
     }

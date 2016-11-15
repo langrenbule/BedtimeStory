@@ -22,6 +22,7 @@ import com.deity.bedtimestory.dao.NewBronContent;
 import com.deity.bedtimestory.entity.NewBornContentType;
 import com.deity.bedtimestory.network.DataBiz;
 import com.deity.bedtimestory.network.TechBabyBiz;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +105,18 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
     public void onRefresh() {
         refresh_layout.setRefreshing(true);
         getNewItems(url);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);       //统计时长
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     public void getNewItems(final String destUrl){

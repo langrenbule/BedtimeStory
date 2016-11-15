@@ -30,6 +30,7 @@ import com.deity.bedtimestory.event.NetWorkEvent;
 import com.deity.bedtimestory.network.DataBiz;
 import com.deity.bedtimestory.network.TechBabyBiz;
 import com.deity.bedtimestory.utils.EndlessRecyclerOnScrollListener;
+import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -185,6 +186,18 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             System.out.println("request Exception>>>" + e.getMessage());
         }
         return newsItems;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(TAG); //统计页面，"MainScreen"为页面名称，可自定义
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(TAG);
     }
 
     protected void unsubscribe() {
