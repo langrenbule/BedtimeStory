@@ -2,7 +2,6 @@ package com.deity.bedtimestory.adapter;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,13 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.deity.bedtimestory.R;
 import com.deity.bedtimestory.dao.NewBornContentEntity;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +21,13 @@ import java.util.List;
 public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.ViewHolder> {
     private LayoutInflater mInflater;
     private List<NewBornContentEntity> mDatas = new ArrayList<>();
+    private Context context;
 
-    private ImageLoader imageLoader = ImageLoader.getInstance();
-    private DisplayImageOptions options;
+
 
     public NewContentAdapter(Context context) {
+        this.context = context;
         mInflater = LayoutInflater.from(context);
-
-        imageLoader.init(ImageLoaderConfiguration.createDefault(context));
-        options = new DisplayImageOptions.Builder().showStubImage(R.drawable.images)
-                .showImageForEmptyUri(R.drawable.images).showImageOnFail(R.drawable.images).cacheInMemory()
-                .cacheOnDisc().imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565)
-                .displayer(new FadeInBitmapDisplayer(300)).build();
     }
 
     public void setData(List<NewBornContentEntity> datas) {
@@ -90,7 +80,7 @@ public class NewContentAdapter extends RecyclerView.Adapter<NewContentAdapter.Vi
         if (TextUtils.isEmpty(news.getNewBornContent())) return;
         switch (news.getNewBornType()){
             case 0: //NewBornContentType.NEW_BORN_CONTENT_IMAGEURL.getCode()
-                imageLoader.displayImage(news.getNewBornContent(), holder.mImageView, options);
+                Glide.with(context).load(news.getNewBornContent()).placeholder(R.drawable.ic_launcher).thumbnail(1.0f).into(holder.mImageView);
                 break;
             case 1://NewBornContentType.NEW_BORN_CONTENT_TYPE_TITLE
                 holder.mTextView.setText(news.getNewBornContent());

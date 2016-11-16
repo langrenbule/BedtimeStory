@@ -1,7 +1,6 @@
 package com.deity.bedtimestory.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,12 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.deity.bedtimestory.R;
 import com.deity.bedtimestory.dao.NewItemEntity;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +24,10 @@ public class NewItemsAdapter extends RecyclerView.Adapter<NewItemsAdapter.ViewHo
     private LayoutInflater inflater;
     private Context context;
     private RecycleViewOnClickListener recycleViewOnClickListener;
-    private DisplayImageOptions options;
 
     public NewItemsAdapter(Context context){
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        options = new DisplayImageOptions.Builder().showStubImage(R.drawable.images)
-                .showImageForEmptyUri(R.drawable.images).showImageOnFail(R.drawable.images).cacheInMemory()
-                .cacheOnDisc().imageScaleType(ImageScaleType.EXACTLY).bitmapConfig(Bitmap.Config.RGB_565)
-                .displayer(new FadeInBitmapDisplayer(300)).build();
     }
 
     @Override
@@ -80,8 +71,7 @@ public class NewItemsAdapter extends RecyclerView.Adapter<NewItemsAdapter.ViewHo
         NewItemEntity data = newItems.get(position);
         holder.mTitle.setText(data.getTitle());
         holder.mContent.setText(data.getContent());
-//        Glide.with(context).load(data.getImgLink()).placeholder(R.drawable.ic_launcher).into(holder.mImg);
-        ImageLoader.getInstance().displayImage(data.getImgLink(), holder.mImg, options);
+        Glide.with(context).load(data.getImgLink()).placeholder(R.drawable.ic_launcher).thumbnail(1.0f).into(holder.mImg);
         holder.mDate.setText(data.getDate());
         holder.itemView.setTag(data);
     }

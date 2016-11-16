@@ -26,7 +26,7 @@
             android:value="ebe3dbf8" />
 
         <meta-data android:value="582afe837666133dc6000bbc" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="NewBorn_Channel" android:name="UMENG_CHANNEL"/>
+        <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
 
         <activity
             android:name=".InitActivity"

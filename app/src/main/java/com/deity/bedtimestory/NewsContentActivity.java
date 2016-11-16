@@ -1,6 +1,7 @@
 package com.deity.bedtimestory;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -49,7 +52,8 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
     /**
      * 该页面的url
      */
-    private String url;
+    private String articleUrl;
+    private String articleTitle;
     private DataBiz<NewBornItemEntity,NewBronContent> mNewItemBiz;
 
     private NewContentAdapter mAdapter;
@@ -77,8 +81,9 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         mNewItemBiz = TechBabyBiz.getInstance();
         Bundle extras = getIntent().getExtras();
-        collapsingToolbar.setTitle(extras.getString("newsTitle"));
-        url = extras.getString("url");
+        articleTitle = extras.getString("newsTitle");
+        collapsingToolbar.setTitle(articleTitle);
+        articleUrl = extras.getString("url");
         String imageUrl = extras.getString("imageUrl");
         if(!TextUtils.isEmpty(imageUrl)){
             Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_launcher).into(backdrop);
@@ -95,16 +100,43 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
             @Override
             public void run() {
                 refresh_layout.setRefreshing(true);
-                getNewItems(url);
+                getNewItems(articleUrl);
             }
         }, 1000);
 
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_share:
+                shareApp();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void shareApp(){
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT,"精品文章分享");
+        intent.putExtra(Intent.EXTRA_TEXT, articleTitle+">>>>"+articleUrl);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(Intent.createChooser(intent,getTitle()));
+    }
+
+    @Override
     public void onRefresh() {
         refresh_layout.setRefreshing(true);
-        getNewItems(url);
+        getNewItems(articleUrl);
     }
 
     @Override
