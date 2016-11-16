@@ -86,7 +86,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         articleUrl = extras.getString("url");
         String imageUrl = extras.getString("imageUrl");
         if(!TextUtils.isEmpty(imageUrl)){
-            Glide.with(this).load(imageUrl).placeholder(R.drawable.ic_launcher).into(backdrop);
+            Glide.with(this).load(imageUrl).placeholder(R.drawable.init_pic).into(backdrop);
         }
         mAdapter = new NewContentAdapter(this);
         mListView = (RecyclerView) findViewById(content_items);
