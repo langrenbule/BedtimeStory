@@ -126,7 +126,7 @@ public class NewsContentActivity extends AppCompatActivity implements SwipeRefre
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT,"精品文章分享");
-        intent.putExtra(Intent.EXTRA_TEXT, articleTitle+">>>>"+articleUrl);
+        intent.putExtra(Intent.EXTRA_TEXT, articleTitle+"\n"+articleUrl);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(intent,getTitle()));
     }
