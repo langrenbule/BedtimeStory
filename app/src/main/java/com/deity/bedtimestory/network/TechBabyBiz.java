@@ -33,7 +33,16 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
         return instance;
     }
 
-    public String getImageUrlContent(String wait2match){
+    public String getCorrectImageUrl(String imageUrlFromWebsite){
+        String prefix = "http://www.mamabaobao.com/";
+        String imageUrlTemp = getImageUrlContent(imageUrlFromWebsite);
+        if (!TextUtils.isEmpty(imageUrlTemp)&&!imageUrlTemp.contains(prefix)){
+            imageUrlTemp = prefix+imageUrlTemp;
+        }
+        return imageUrlTemp;
+    }
+
+    private String getImageUrlContent(String wait2match){
         Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
         Matcher matcher = pattern.matcher(wait2match);
         if (matcher.find()){
@@ -56,17 +65,17 @@ public class TechBabyBiz implements DataBiz<NewBornItemEntity,NewBronContent>{
             entity.setNewBornTitle(newBornTitle.text());//获取标题
             entity.setNewBornArticleUrl(newBornTitle.attr("href"));
             Element imageLink = element.select("div.img_content").select("a>div").first();
-            entity.setNewBornImageUrl(getImageUrlContent(imageLink.attr("style")));//获取图片地址
+            entity.setNewBornImageUrl(getCorrectImageUrl(imageLink.attr("style")));//获取图片地址
             Element newBronDescription = element.select("div.text_content").select("p").first();
             entity.setNewBornDescription(newBronDescription.text());
             Element newBronData = element.select("div.text_content").select("label").first();
             entity.setNewBornData(newBronData.text());
             newItemList.add(entity);
-            //System.out.println("title>>>"+entity.getNewBornTitle()+
-//                    "\n ArticleUrl>>>"+entity.getNewBornArticleUrl()+
-//                    "\n data>>>"+entity.getNewBornData()+
-//                    "\n desc>>>"+entity.getNewBornDescription()+
-//                    "\n imageUrl>>>"+entity.getNewBornImageUrl());
+            System.out.println("title>>>"+entity.getNewBornTitle()+
+                    "\n ArticleUrl>>>"+entity.getNewBornArticleUrl()+
+                    "\n data>>>"+entity.getNewBornData()+
+                    "\n desc>>>"+entity.getNewBornDescription()+
+                    "\n imageUrl>>>"+entity.getNewBornImageUrl());
         }
         return newItemList;
     }
